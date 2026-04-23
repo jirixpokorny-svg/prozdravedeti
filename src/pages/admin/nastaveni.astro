@@ -2,6 +2,7 @@
 import { validateSession, getSessionFromRequest, setPassword } from '../../lib/auth';
 if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
 import { getDb } from '../../lib/db';
+import { PHOTO_SLOTS, getPhotoUrl } from '../../lib/photos';
 
 let saved = false;
 let error = '';
@@ -28,6 +29,7 @@ if (Astro.request.method === 'POST') {
 
 const db = getDb();
 const lenkaEmail = (db.prepare("SELECT value FROM settings WHERE key='lenka_email'").get() as any)?.value || '';
+const photoUrls = Object.fromEntries(PHOTO_SLOTS.map(s => [s.key, getPhotoUrl(s.key)])) as Record<string, string>;
 ---
 
 <!DOCTYPE html>
@@ -57,6 +59,14 @@ const lenkaEmail = (db.prepare("SELECT value FROM settings WHERE key='lenka_emai
     .btn:hover { background: #2d5c38; }
     .success { background: #dcfce7; color: #166534; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; font-weight: 600; }
     .error { background: #fee2e2; color: #dc2626; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+    .photo-slot { display: flex; gap: 16px; align-items: center; padding: 16px 0; border-bottom: 1px solid #f3f4f6; }
+    .photo-slot:last-child { border-bottom: none; }
+    .photo-thumb { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; background: #f3f4f6; flex-shrink: 0; }
+    .photo-info { flex: 1; min-width: 0; }
+    .photo-info p { font-size: 13px; color: #374151; font-weight: 600; margin: 0 0 8px; }
+    .photo-upload { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .btn-sm { padding: 7px 16px; font-size: 13px; }
+    .upload-status { font-size: 12px; color: #3d7a4a; font-weight: 600; display: none; }
   </style>
 </head>
 <body>
@@ -91,6 +101,24 @@ const lenkaEmail = (db.prepare("SELECT value FROM settings WHERE key='lenka_emai
     </div>
 
     <div class="card">
+      <h2>🖼️ Fotografie</h2>
+      <p style="font-size:14px;color:#6b7280;margin:0 0 20px">Nahrajte fotky pro jednotlivé sekce webu. Povolené formáty: jpg, png, webp.</p>
+      {PHOTO_SLOTS.map(slot => (
+        <div class="photo-slot">
+          <img src={photoUrls[slot.key]} alt={slot.label} class="photo-thumb" id={`thumb-${slot.key}`} />
+          <div class="photo-info">
+            <p>{slot.label}</p>
+            <div class="photo-upload">
+              <input type="file" accept="image/jpeg,image/png,image/webp" id={`file-${slot.key}`} style="font-size:13px" />
+              <button type="button" class="btn btn-sm" onclick={`uploadPhoto('${slot.key}')`}>Nahrát</button>
+              <span class="upload-status" id={`status-${slot.key}`}>✅ Uloženo!</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="card">
       <h2>🔒 Změna hesla</h2>
       <form method="POST">
         <input type="hidden" name="action" value="password" />
@@ -106,5 +134,26 @@ const lenkaEmail = (db.prepare("SELECT value FROM settings WHERE key='lenka_emai
       </form>
     </div>
   </main>
+  <script>
+    async function uploadPhoto(slot) {
+      const fileInput = document.getElementById(`file-${slot}`);
+      const statusEl = document.getElementById(`status-${slot}`);
+      const thumbEl = document.getElementById(`thumb-${slot}`);
+      if (!fileInput.files[0]) { alert('Vyberte soubor.'); return; }
+      const form = new FormData();
+      form.append('slot', slot);
+      form.append('file', fileInput.files[0]);
+      const res = await fetch('/api/upload-photo', { method: 'POST', body: form });
+      const data = await res.json();
+      if (data.ok) {
+        statusEl.style.display = 'inline';
+        setTimeout(() => statusEl.style.display = 'none', 3000);
+        const url = URL.createObjectURL(fileInput.files[0]);
+        thumbEl.src = url;
+      } else {
+        alert(data.error || 'Chyba při nahrávání.');
+      }
+    }
+  </script>
 </body>
 </html>

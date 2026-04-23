@@ -3,10 +3,14 @@ import Layout from '../layouts/Layout.astro';
 import { getDb } from '../lib/db';
 import { formatDate, formatPrice } from '../lib/slugify';
 import type { Camp, Seminar } from '../lib/db';
+import { getPhotoUrl } from '../lib/photos';
 
 const db = getDb();
 const camps = db.prepare("SELECT * FROM camps WHERE active=1 AND date(date_from) >= date('now') ORDER BY sort_order, date_from LIMIT 3").all() as Camp[];
 const seminars = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_from) >= date('now') ORDER BY sort_order, date_from LIMIT 3").all() as Seminar[];
+const photoHero = getPhotoUrl('lenka-hero');
+const photoOmne = getPhotoUrl('lenka-o-mne');
+
 const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminars.map(s => ({...s, kind: 'seminar' as const}))]
   .sort((a, b) => a.date_from.localeCompare(b.date_from))
   .slice(0, 3)
@@ -68,7 +72,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
         <div class="relative flex justify-center">
           <div class="relative w-full max-w-sm">
             <div class="aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl">
-              <img src="/images/Lenka_foto/lenka-hero.png" alt="Lenka Pokorná, výživová poradkyně" class="w-full h-full object-cover object-top" />
+              <img src={photoHero} alt="Lenka Pokorná, výživová poradkyně" class="w-full h-full object-cover object-top" />
             </div>
             <!-- Float badge vlevo dole -->
             <div class="absolute -bottom-4 -left-6 bg-white rounded-2xl shadow-lg px-4 py-3 flex items-center gap-3">
@@ -142,7 +146,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
         <div class="flex justify-center">
           <div class="relative w-full max-w-xs">
             <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-lg">
-              <img src="/images/Lenka_foto/lenka-o-mne.png" alt="Lenka Pokorná, výživová poradkyně" class="w-full h-full object-cover object-top" />
+              <img src={photoOmne} alt="Lenka Pokorná, výživová poradkyně" class="w-full h-full object-cover object-top" />
             </div>
             <div class="absolute -bottom-3 -right-3 bg-[#3d7a4a] text-white rounded-2xl px-4 py-2 text-sm font-bold shadow-lg">
               Od roku 2015 🎓
