@@ -1,58 +1,167 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const services = [
+  {
+    icon: '🤰',
+    title: 'Výživa v těhotenství',
+    slug: 'tehotenstvi',
+    color: 'from-[#fef3dc] to-[#fef9ef]',
+    accent: '#c07818',
+    summary: 'Co a kolik jíst v těhotenství, jak pokrýt zvýšené nároky na živiny, jak zvládnout nechutenství a ranní nevolnosti.',
+    points: [
+      'Vyvážený jídelníček pro těhotnou',
+      'Klíčové vitaminy a minerály (folát, železo, jód, DHA…)',
+      'Jak zvládat nevolnosti a chutě',
+      'Čemu se raději vyhnout',
+      'Přibírání na váze v těhotenství',
+    ],
+  },
+  {
+    icon: '🍼',
+    title: 'Výživa kojících maminek',
+    slug: 'kojeni',
+    color: 'from-[#e8f5ec] to-[#f0faf4]',
+    accent: '#3d7a4a',
+    summary: 'Jak jíst při kojení, aby mělo miminko vše potřebné, a jak udržet energii pro sebe — bez diet a bez strádání.',
+    points: [
+      'Co jíst a čemu se vyhnout při kojení',
+      'Dostatečný přísun energie a živin',
+      'Potraviny podporující tvorbu mléka',
+      'Alergie a kojení',
+      'Hubnutí po porodu zdravě a bezpečně',
+    ],
+  },
+  {
+    icon: '🥣',
+    title: 'Začínáme s příkrmy',
+    slug: 'prikrmy',
+    color: 'from-[#fce8e8] to-[#fff4f4]',
+    accent: '#c04040',
+    summary: 'Kdy a jak začít, co zavádět jako první, jak naučit miminko jíst ze lžičky i samo — krok za krokem.',
+    points: [
+      'Kdy je miminko připraveno na příkrmy',
+      'První potraviny — co a v jakém pořadí',
+      'BLW vs. tradiční příkrmy (nebo kombinace)',
+      'Jak předcházet odmítání jídla',
+      'Alergenní potraviny a jak je zavádět',
+    ],
+  },
+  {
+    icon: '🧒',
+    title: 'Výživa dětí od 1 roku',
+    slug: 'deti',
+    color: 'from-[#e8f0fb] to-[#f4f7fe]',
+    accent: '#3a5fa0',
+    summary: 'Zdravé jídlo pro batolata a školáky: jak sestavit jídelníček, zvládnout výběrovost a naučit děti radosti z dobrého jídla.',
+    points: [
+      'Vyvážený jídelníček pro batole a školáka',
+      'Jak zvládat výběrové jedlíky',
+      'Zdravé svačiny do školky a školy',
+      'Sladkosti a junk food — jak na ně',
+      'Rodinný stůl jako základ dobrých návyků',
+    ],
+  },
+  {
+    icon: '⚖️',
+    title: 'Úprava hmotnosti',
+    slug: 'hmotnost',
+    color: 'from-[#f0e8fb] to-[#f8f4fe]',
+    accent: '#7a3d9a',
+    summary: 'Zdravé a trvalé změny hmotnosti pro rodiče i děti — bez drastických diet, s respektem k tělu a bez zbytečných zákazů.',
+    points: [
+      'Realistické cíle a udržitelný přístup',
+      'Jídelníček bez drastického omezování',
+      'Pohybová aktivita jako součást životního stylu',
+      'Psychologie jídla a emoční jedení',
+      'Podpora celé rodiny v procesu změny',
+    ],
+  },
+];
 ---
 
-<Layout title="Výživové poradenství – Pro zdravé děti" description="Osobní konzultace výživy dětí, těhotenství a kojení. Lenka Pokorná, Písek.">
-  <section class="bg-gradient-to-br from-[#e8f5ec] to-[#faf8f3] py-16">
+<Layout title="S čím vám pomůžu – Pro zdravé děti" description="Výživové poradenství pro těhotné, kojící maminky, příkrmy, výživa dětí od 1 roku, úprava hmotnosti. Lenka Pokorná, Písek.">
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-[#e8f5ec] via-[#faf8f3] to-[#fef3dc] py-16">
     <div class="max-w-3xl mx-auto px-4 text-center">
-      <span class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm">💬 Osobní i online</span>
-      <h1 class="text-4xl font-black text-[#2c2c2c] mb-3">Výživové poradenství</h1>
-      <p class="text-lg text-gray-600">Konzultace šité přesně na míru vaší rodině</p>
+      <span class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm border border-[#3d7a4a]/10">💬 Osobní i online konzultace</span>
+      <h1 class="text-4xl md:text-5xl font-black text-[#2c2c2c] mb-4 leading-tight">S čím vám pomůžu</h1>
+      <p class="text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
+        Každá rodina je jiná. Konzultace navrhuji přesně na míru — ať jste teprve těhotná, kojíte, nebo řešíte, proč vaše dítě nejí zeleninu.
+      </p>
     </div>
   </section>
 
-  <section class="max-w-3xl mx-auto px-4 py-12">
-    <div class="grid md:grid-cols-2 gap-6 mb-10">
-      {[
-        { icon: '🤰', title: 'Těhotenství & kojení', desc: 'Jak správně jíst v těhotenství a při kojení, aby bylo miminko zdravé a vy plné energie.' },
-        { icon: '🍼', title: 'Příkrmy a kojenci', desc: 'Kdy a jak začít s příkrmy, jaké potraviny zavádět a jak z kojence udělat odvážného jedlíka.' },
-        { icon: '🧒', title: 'Výživa dětí', desc: 'Zdravá školní svačina, vyvážený jídelníček, odmítání jídla, výběrovost — pomůžu vám to zvládnout.' },
-        { icon: '⚖️', title: 'Úprava hmotnosti', desc: 'Zdravé přibírání nebo snižování váhy pro celou rodinu bez drastických diet.' },
-      ].map(s => (
-        <div class="card p-6">
-          <div class="text-3xl mb-3">{s.icon}</div>
-          <h3 class="font-bold text-lg mb-2">{s.title}</h3>
-          <p class="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+  <!-- Služby -->
+  <section class="max-w-5xl mx-auto px-4 py-14 space-y-16">
+    {services.map((s, i) => (
+      <div class={`grid md:grid-cols-2 gap-10 items-center ${i % 2 === 1 ? 'md:[&>*:first-child]:order-2' : ''}`}>
+        <!-- Text -->
+        <div>
+          <div class="flex items-center gap-3 mb-4">
+            <span class="text-4xl">{s.icon}</span>
+            <h2 class="text-2xl font-black text-[#2c2c2c]">{s.title}</h2>
+          </div>
+          <p class="text-gray-600 leading-relaxed mb-5">{s.summary}</p>
+          <ul class="space-y-2">
+            {s.points.map(point => (
+              <li class="flex items-start gap-2.5 text-sm text-gray-700">
+                <span class="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={`background:${s.accent}20`}>
+                  <span class="w-2 h-2 rounded-full" style={`background:${s.accent}`}></span>
+                </span>
+                {point}
+              </li>
+            ))}
+          </ul>
+          <div class="mt-6">
+            <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 text-sm font-bold hover:underline" style={`color:${s.accent}`}>
+              Chci konzultaci →
+            </a>
+          </div>
         </div>
-      ))}
-    </div>
+        <!-- Foto placeholder -->
+        <div class={`aspect-[4/3] rounded-3xl bg-gradient-to-br ${s.color} border-2 border-dashed flex flex-col items-center justify-center text-center p-8`} style={`border-color:${s.accent}30`}>
+          <div class="text-5xl mb-3">{s.icon}</div>
+          <p class="font-semibold text-sm" style={`color:${s.accent}`}>Fotografie — {s.title}</p>
+          <p class="text-gray-400 text-xs mt-1">Placeholder, foto doplní majitel</p>
+        </div>
+      </div>
+    ))}
+  </section>
 
-    <div class="card p-8 mb-8">
-      <h2 class="text-2xl font-bold mb-4">Jak probíhá konzultace?</h2>
-      <div class="space-y-4">
+  <!-- Jak konzultace probíhá -->
+  <section class="bg-[#faf8f3] py-14">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-2 text-center">Jak konzultace probíhá?</h2>
+      <p class="text-center text-gray-500 mb-10">Online nebo osobně v Písku — vy si vyberete.</p>
+      <div class="grid md:grid-cols-3 gap-6">
         {[
-          { num: '1', title: 'Úvodní konzultace (60 min)', desc: 'Rozebereme vaši situaci, cíle a aktuální stravovací návyky. Online nebo osobně v Písku.' },
-          { num: '2', title: 'Individuální plán', desc: 'Dostanete konkrétní doporučení a jídelní plán šitý na míru vašemu dítěti a rodině.' },
-          { num: '3', title: 'Navazující konzultace', desc: 'Sledujeme pokrok, upravujeme plán a odpovídáme na otázky, které přijdou v průběhu.' },
+          { num: '1', icon: '💬', title: 'Úvodní konzultace', desc: 'Rozebereme vaši situaci, cíle a aktuální stravovací návyky. Trvá přibližně 60 minut.' },
+          { num: '2', icon: '📋', title: 'Individuální plán', desc: 'Dostanete konkrétní doporučení a jídelní plán šitý na míru vašemu dítěti a rodině.' },
+          { num: '3', icon: '🔄', title: 'Navazující konzultace', desc: 'Sledujeme pokrok, upravujeme plán a odpovídáme na otázky, které přijdou v průběhu.' },
         ].map(step => (
-          <div class="flex gap-4">
-            <div class="w-8 h-8 bg-[#3d7a4a] text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">{step.num}</div>
-            <div>
-              <h4 class="font-bold text-[#2c2c2c]">{step.title}</h4>
-              <p class="text-gray-500 text-sm mt-0.5">{step.desc}</p>
-            </div>
+          <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
+            <div class="w-10 h-10 bg-[#3d7a4a] text-white rounded-full flex items-center justify-center font-black text-lg mx-auto mb-4">{step.num}</div>
+            <div class="text-2xl mb-2">{step.icon}</div>
+            <h3 class="font-bold text-[#2c2c2c] mb-2">{step.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
           </div>
         ))}
       </div>
     </div>
+  </section>
 
-    <div class="bg-[#3d7a4a] rounded-2xl p-8 text-center text-white">
-      <h2 class="text-2xl font-bold mb-2">Objednejte se</h2>
-      <p class="text-green-200 mb-6">Napište mi nebo zavolejte — ráda odpovím na první dotazy zdarma.</p>
+  <!-- CTA -->
+  <section class="bg-gradient-to-br from-[#3d7a4a] to-[#2d5c38] py-14 text-white">
+    <div class="max-w-2xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-black mb-3">Objednejte se</h2>
+      <p class="text-green-200 mb-8 leading-relaxed">Napište mi nebo zavolejte — na první dotazy odpovídám ráda zdarma.</p>
       <div class="flex flex-wrap gap-3 justify-center">
-        <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] font-bold px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">✉️ Napsat email</a>
-        <a href="tel:+420725757041" class="inline-flex items-center gap-2 bg-[#2d5c38] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#1e3f26] transition-colors">📞 Zavolat</a>
+        <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] font-bold px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">✉️ info@prozdravedeti.cz</a>
+        <a href="tel:+420725757041" class="inline-flex items-center gap-2 bg-[#ffffff20] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#ffffff30] transition-colors border border-white/30">📞 +420 725 757 041</a>
       </div>
     </div>
   </section>
+
 </Layout>
