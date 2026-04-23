@@ -3,8 +3,7 @@ import { validateSession, getSessionFromRequest } from '../../../lib/auth';
 if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
 import { getDb } from '../../../lib/db';
 import { slugify } from '../../../lib/slugify';
-import fs from 'fs';
-import path from 'path';
+import { saveUpload } from '../../../lib/upload';
 
 if (Astro.request.method === 'POST') {
   const form = await Astro.request.formData();
@@ -24,12 +23,7 @@ if (Astro.request.method === 'POST') {
   let poster_url: string | null = null;
   const posterFile = form.get('poster') as File | null;
   if (posterFile && posterFile.size > 0) {
-    const ext = posterFile.name.split('.').pop();
-    const filename = `camp-${Date.now()}.${ext}`;
-    const uploadDir = path.join(process.cwd(), 'public/uploads');
-    fs.mkdirSync(uploadDir, { recursive: true });
-    fs.writeFileSync(path.join(uploadDir, filename), Buffer.from(await posterFile.arrayBuffer()));
-    poster_url = `/uploads/${filename}`;
+    poster_url = await saveUpload(posterFile, 'camp');
   }
 
   const slug = slugify(title) + '-' + date_from.slice(0, 7).replace('-', '-');

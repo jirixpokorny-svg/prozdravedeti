@@ -3,8 +3,7 @@ import { validateSession, getSessionFromRequest } from '../../../lib/auth';
 if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
 import { getDb } from '../../../lib/db';
 import type { Camp } from '../../../lib/db';
-import fs from 'fs';
-import path from 'path';
+import { saveUpload, deleteUpload } from '../../../lib/upload';
 
 const { id } = Astro.params;
 const db = getDb();
@@ -30,23 +29,14 @@ if (Astro.request.method === 'POST') {
   let poster_url = camp.poster_url;
 
   if (remove_poster && poster_url) {
-    const localPath = path.join(process.cwd(), 'public', poster_url);
-    if (fs.existsSync(localPath)) fs.unlinkSync(localPath);
+    deleteUpload(poster_url);
     poster_url = null;
   }
 
   const posterFile = form.get('poster') as File | null;
   if (posterFile && posterFile.size > 0) {
-    if (poster_url) {
-      const old = path.join(process.cwd(), 'public', poster_url);
-      if (fs.existsSync(old)) fs.unlinkSync(old);
-    }
-    const ext = posterFile.name.split('.').pop();
-    const filename = `camp-${Date.now()}.${ext}`;
-    const uploadDir = path.join(process.cwd(), 'public/uploads');
-    fs.mkdirSync(uploadDir, { recursive: true });
-    fs.writeFileSync(path.join(uploadDir, filename), Buffer.from(await posterFile.arrayBuffer()));
-    poster_url = `/uploads/${filename}`;
+    deleteUpload(poster_url);
+    poster_url = await saveUpload(posterFile, 'camp');
   }
 
   db.prepare(`UPDATE camps SET title=?,date_from=?,date_to=?,time_info=?,location=?,price=?,spots_total=?,spots_left=?,age_range=?,description=?,poster_url=?,active=?,sort_order=? WHERE id=?`)
