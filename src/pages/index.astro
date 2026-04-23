@@ -143,10 +143,8 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
         <!-- Foto -->
         <div class="flex justify-center">
           <div class="relative w-full max-w-xs">
-            <div class="aspect-square rounded-[2.5rem] bg-gradient-to-br from-[#fef3dc] to-[#faf0e0] border-2 border-dashed border-[#f5a623]/30 flex flex-col items-center justify-center text-center p-8 shadow-lg">
-              <div class="text-6xl mb-4">🌱</div>
-              <p class="text-[#c07818] font-bold text-sm">Foto Lenky — přirozené</p>
-              <p class="text-gray-400 text-xs mt-1">Neformální portrét s úsměvem</p>
+            <div class="aspect-square rounded-[2.5rem] overflow-hidden shadow-lg">
+              <img src="/images/Lenka_foto/lenka-portret.jpg" alt="Lenka Pokorná, výživová poradkyně" class="w-full h-full object-cover object-top" />
             </div>
             <div class="absolute -bottom-3 -right-3 bg-[#3d7a4a] text-white rounded-2xl px-4 py-2 text-sm font-bold shadow-lg">
               Od roku 2015 🎓
