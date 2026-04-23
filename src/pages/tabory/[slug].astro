@@ -1,0 +1,163 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getDb } from '../../lib/db';
+import { formatDate, formatPrice } from '../../lib/slugify';
+import type { Camp } from '../../lib/db';
+
+const { slug } = Astro.params;
+const db = getDb();
+const camp = db.prepare("SELECT * FROM camps WHERE slug = ? AND active = 1").get(slug) as Camp | undefined;
+
+if (!camp) return Astro.redirect('/tabory');
+
+const isFull = camp.spots_left === 0;
+---
+
+<Layout title={`${camp.title} – Pro zdravé děti`} description={camp.description.slice(0, 160)}>
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <a href="/tabory" class="inline-flex items-center gap-2 text-[#3d7a4a] font-semibold text-sm mb-6 hover:underline">
+      ← Zpět na tábory
+    </a>
+
+    <div class="grid md:grid-cols-2 gap-10 items-start">
+      <!-- Leták / poster -->
+      <div>
+        {camp.poster_url ? (
+          <img src={camp.poster_url} alt={camp.title} class="w-full rounded-3xl shadow-lg" />
+        ) : (
+          <div class="w-full aspect-[3/4] bg-gradient-to-br from-[#e8f5ec] to-[#f0ebe0] rounded-3xl flex items-center justify-center text-8xl shadow-inner">🏕️</div>
+        )}
+      </div>
+
+      <!-- Info + formulář -->
+      <div class="sticky top-24">
+        <div class="flex items-center gap-2 mb-3 flex-wrap">
+          <span class="bg-[#e8f5ec] text-[#3d7a4a] text-xs font-bold px-3 py-1 rounded-full">Tábor</span>
+          {camp.age_range && <span class="bg-[#fef3dc] text-[#c07818] text-xs font-bold px-3 py-1 rounded-full">věk {camp.age_range}</span>}
+        </div>
+
+        <h1 class="text-3xl font-black text-[#2c2c2c] mb-4">{camp.title}</h1>
+
+        <div class="bg-[#e8f5ec] rounded-2xl p-5 mb-6 space-y-2">
+          <div class="flex items-start gap-3 text-sm">
+            <span class="text-lg">📅</span>
+            <div>
+              <span class="font-semibold">{formatDate(camp.date_from)}</span>
+              {camp.date_to && <span class="text-gray-600"> – {formatDate(camp.date_to)}</span>}
+            </div>
+          </div>
+          {camp.time_info && (
+            <div class="flex items-center gap-3 text-sm">
+              <span class="text-lg">🕐</span>
+              <span>{camp.time_info}</span>
+            </div>
+          )}
+          <div class="flex items-start gap-3 text-sm">
+            <span class="text-lg">📍</span>
+            <span>{camp.location}</span>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="text-lg">👶</span>
+            <span>{isFull ? 'Plně obsazeno' : `${camp.spots_left} z ${camp.spots_total} míst volných`}</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-lg">💰</span>
+            <span class="text-xl font-black text-[#3d7a4a]">{formatPrice(camp.price)}</span>
+          </div>
+        </div>
+
+        <div class="prose prose-sm text-gray-700 mb-6" set:html={camp.description.replace(/\n/g, '<br/>')} />
+
+        {isFull ? (
+          <div class="bg-gray-100 rounded-2xl p-5 text-center">
+            <p class="font-bold text-gray-600 mb-2">Tento termín je plně obsazený</p>
+            <p class="text-sm text-gray-500">Napište nám na <a href="mailto:info@prozdravedeti.cz" class="text-[#3d7a4a]">info@prozdravedeti.cz</a> a dáme vám vědět o dalším termínu.</p>
+          </div>
+        ) : (
+          <div>
+            <h2 class="text-xl font-bold text-[#2c2c2c] mb-4">Přihláška</h2>
+            <form id="order-form" class="space-y-4">
+              <input type="hidden" name="item_id" value={camp.id} />
+              <input type="hidden" name="item_title" value={camp.title} />
+              <input type="hidden" name="type" value="camp" />
+
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="label">Jméno dítěte *</label>
+                  <input type="text" name="child_name" required class="input" placeholder="Honzík Novák" />
+                </div>
+                <div>
+                  <label class="label">Věk dítěte *</label>
+                  <input type="text" name="child_age" required class="input" placeholder="8" />
+                </div>
+              </div>
+              <div>
+                <label class="label">Jméno rodiče *</label>
+                <input type="text" name="parent_name" required class="input" placeholder="Jana Nováková" />
+              </div>
+              <div>
+                <label class="label">Email *</label>
+                <input type="email" name="email" required class="input" placeholder="jana@email.cz" />
+              </div>
+              <div>
+                <label class="label">Telefon *</label>
+                <input type="tel" name="phone" required class="input" placeholder="+420 123 456 789" />
+              </div>
+              <div>
+                <label class="label">Poznámka (alergie, dotazy…)</label>
+                <textarea name="note" rows="3" class="input resize-none" placeholder="Sem napište vše důležité…"></textarea>
+              </div>
+
+              <div id="form-error" class="hidden bg-red-50 text-red-700 rounded-xl p-3 text-sm"></div>
+              <div id="form-success" class="hidden bg-[#e8f5ec] text-[#2d5c38] rounded-xl p-4 text-sm font-semibold"></div>
+
+              <button type="submit" id="submit-btn" class="btn-warm w-full justify-center text-base">
+                Odeslat přihlášku
+              </button>
+              <p class="text-xs text-gray-400 text-center">Po odeslání vás budeme kontaktovat s dalšími kroky.</p>
+            </form>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const form = document.getElementById('order-form') as HTMLFormElement | null;
+  const errBox = document.getElementById('form-error');
+  const successBox = document.getElementById('form-success');
+  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!submitBtn) return;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Odesílám…';
+    if (errBox) errBox.classList.add('hidden');
+    if (successBox) successBox.classList.add('hidden');
+
+    const data = Object.fromEntries(new FormData(form));
+    try {
+      const res = await fetch('/api/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      const json = await res.json();
+      if (res.ok) {
+        form.reset();
+        form.classList.add('hidden');
+        if (successBox) {
+          successBox.textContent = '🎉 Přihláška odeslána! Potvrzení jsme poslali na váš email. Brzy se vám ozveme.';
+          successBox.classList.remove('hidden');
+        }
+      } else {
+        throw new Error(json.error || 'Chyba při odesílání');
+      }
+    } catch (err: any) {
+      if (errBox) {
+        errBox.textContent = err.message || 'Něco se pokazilo, zkuste to prosím znovu.';
+        errBox.classList.remove('hidden');
+      }
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Odeslat přihlášku';
+    }
+  });
+</script>

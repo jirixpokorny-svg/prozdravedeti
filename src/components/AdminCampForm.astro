@@ -1,0 +1,159 @@
+---
+import type { Camp } from '../lib/db';
+
+interface Props {
+  camp?: Camp;
+  action: string;
+  backUrl: string;
+}
+
+const { camp, action, backUrl } = Astro.props;
+---
+
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #2c2c2c; margin: 0; }
+  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #2d5c38; color: white; padding: 24px 0; }
+  .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .sidebar-logo img { height: 40px; filter: brightness(0) invert(1); }
+  .sidebar nav { padding: 16px 12px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.15s; margin-bottom: 2px; }
+  .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
+  .main { margin-left: 240px; padding: 32px; max-width: 900px; }
+  h1 { font-family: 'Nunito', sans-serif; font-size: 26px; font-weight: 800; margin: 0 0 8px; }
+  .card { background: white; border-radius: 20px; padding: 28px; margin-bottom: 20px; }
+  .card h2 { font-family: 'Nunito', sans-serif; font-size: 17px; font-weight: 700; margin: 0 0 20px; color: #374151; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+  input, textarea, select { width: 100%; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 10px 14px; font-size: 14px; outline: none; transition: border-color 0.15s; font-family: inherit; background: white; }
+  input:focus, textarea:focus, select:focus { border-color: #3d7a4a; box-shadow: 0 0 0 3px rgba(61,122,74,0.1); }
+  textarea { resize: vertical; min-height: 120px; }
+  .field { margin-bottom: 0; }
+  .actions { display: flex; gap: 12px; align-items: center; margin-top: 8px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 11px 24px; border-radius: 999px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; text-decoration: none; transition: all 0.15s; font-family: 'Nunito', sans-serif; }
+  .btn-green { background: #3d7a4a; color: white; } .btn-green:hover { background: #2d5c38; }
+  .btn-gray { background: #f3f4f6; color: #374151; } .btn-gray:hover { background: #e5e7eb; }
+  .btn-red { background: #fee2e2; color: #dc2626; } .btn-red:hover { background: #fecaca; }
+  .back { color: #3d7a4a; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px; }
+  .hint { font-size: 12px; color: #9ca3af; margin-top: 4px; }
+  .poster-preview { margin-top: 8px; }
+  .poster-preview img { max-height: 120px; border-radius: 8px; }
+  .toggle-row { display: flex; align-items: center; gap: 12px; }
+  .toggle { position: relative; width: 44px; height: 24px; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; inset: 0; background: #d1d5db; border-radius: 999px; cursor: pointer; transition: 0.2s; }
+  .toggle input:checked + .toggle-slider { background: #3d7a4a; }
+  .toggle-slider:before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.2s; }
+  .toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+</style>
+
+<a href={backUrl} class="back">← Zpět na tábory</a>
+<h1>{camp ? `Upravit: ${camp.title}` : 'Přidat nový tábor'}</h1>
+
+<form method="POST" action={action} enctype="multipart/form-data" id="camp-form">
+  <div class="card">
+    <h2>Základní informace</h2>
+    <div style="margin-bottom:16px" class="field">
+      <label>Název tábora *</label>
+      <input type="text" name="title" required value={camp?.title || ''} placeholder="Příměstský tábor Kulinářský 2026" />
+    </div>
+    <div class="grid2" style="margin-bottom:16px">
+      <div class="field">
+        <label>Datum začátku *</label>
+        <input type="date" name="date_from" required value={camp?.date_from?.slice(0,10) || ''} />
+      </div>
+      <div class="field">
+        <label>Datum konce</label>
+        <input type="date" name="date_to" value={camp?.date_to?.slice(0,10) || ''} />
+      </div>
+    </div>
+    <div class="grid2" style="margin-bottom:16px">
+      <div class="field">
+        <label>Čas (např. 8:00–16:00)</label>
+        <input type="text" name="time_info" value={camp?.time_info || ''} placeholder="Vždy od 8–8:30 do 15–16:30" />
+      </div>
+      <div class="field">
+        <label>Věkové rozmezí</label>
+        <input type="text" name="age_range" value={camp?.age_range || ''} placeholder="6–14 let" />
+      </div>
+    </div>
+    <div class="field">
+      <label>Místo konání *</label>
+      <input type="text" name="location" required value={camp?.location || ''} placeholder="RC Fazole, Sedláčkova 472, Písek" />
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Cena a místa</h2>
+    <div class="grid3">
+      <div class="field">
+        <label>Cena (Kč) *</label>
+        <input type="number" name="price" required min="0" value={camp?.price || ''} placeholder="4990" />
+      </div>
+      <div class="field">
+        <label>Celkem míst *</label>
+        <input type="number" name="spots_total" required min="1" value={camp?.spots_total || ''} placeholder="12" />
+      </div>
+      <div class="field">
+        <label>Volných míst *</label>
+        <input type="number" name="spots_left" required min="0" value={camp?.spots_left !== undefined ? camp.spots_left : ''} placeholder="12" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Popis tábora</h2>
+    <div class="field">
+      <label>Popis *</label>
+      <textarea name="description" required placeholder="Popište tábor — co děti čeká, program, aktivity…">{camp?.description || ''}</textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Leták / obrázek</h2>
+    <div class="field">
+      <label>Nahrát leták (JPG, PNG, max. 5 MB)</label>
+      <input type="file" name="poster" accept="image/*" />
+      {camp?.poster_url && (
+        <div class="poster-preview">
+          <p style="font-size:12px;color:#6b7280;margin:8px 0 4px">Aktuální leták:</p>
+          <img src={camp.poster_url} alt="Leták" />
+          <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-weight:normal;font-size:13px;color:#dc2626">
+            <input type="checkbox" name="remove_poster" value="1" style="width:auto" />
+            Odebrat leták
+          </label>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Viditelnost</h2>
+    <div class="toggle-row">
+      <label class="toggle">
+        <input type="checkbox" name="active" value="1" checked={!camp || !!camp.active} />
+        <span class="toggle-slider"></span>
+      </label>
+      <span style="font-size:14px;color:#374151">Tábor je viditelný na webu</span>
+    </div>
+    <div style="margin-top:16px" class="field">
+      <label>Pořadí (nižší číslo = dříve v seznamu)</label>
+      <input type="number" name="sort_order" min="0" value={camp?.sort_order || 0} style="max-width:120px" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="submit" class="btn btn-green">💾 Uložit tábor</button>
+    <a href={backUrl} class="btn btn-gray">Zrušit</a>
+    {camp && (
+      <button type="button" class="btn btn-red" onclick="if(confirm('Opravdu smazat tento tábor?')) document.getElementById('delete-form').submit()">
+        🗑️ Smazat
+      </button>
+    )}
+  </div>
+</form>
+
+{camp && (
+  <form id="delete-form" method="POST" action={`/admin/tabory/${camp.id}/smazat`} style="display:none"></form>
+)}

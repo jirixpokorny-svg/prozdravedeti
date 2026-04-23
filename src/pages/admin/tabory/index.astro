@@ -1,0 +1,93 @@
+---
+import { validateSession, getSessionFromRequest } from '../../../lib/auth';
+if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
+import { getDb } from '../../../lib/db';
+import { formatDate } from '../../../lib/slugify';
+import type { Camp } from '../../../lib/db';
+
+const db = getDb();
+const camps = db.prepare("SELECT * FROM camps ORDER BY sort_order, date_from DESC").all() as Camp[];
+---
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tábory – Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #2c2c2c; margin: 0; }
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #2d5c38; color: white; padding: 24px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo img { height: 40px; filter: brightness(0) invert(1); }
+    .sidebar nav { padding: 16px 12px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
+    .main { margin-left: 240px; padding: 32px; }
+    h1 { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 800; margin: 0 0 24px; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 20px; border-radius: 999px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+    .btn-green { background: #3d7a4a; color: white; } .btn-green:hover { background: #2d5c38; }
+    .btn-gray { background: #f3f4f6; color: #374151; } .btn-gray:hover { background: #e5e7eb; }
+    .btn-sm { padding: 5px 12px; font-size: 12px; }
+    .table-wrap { background: white; border-radius: 16px; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { background: #f9fafb; }
+    th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; }
+    td { padding: 14px 16px; font-size: 14px; border-top: 1px solid #f3f4f6; vertical-align: middle; }
+    .badge { display: inline-flex; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-orange { background: #fef3c7; color: #92400e; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-gray { background: #f3f4f6; color: #6b7280; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo"><img src="/images/logo.png" alt="Pro zdravé děti" /></div>
+    <nav>
+      <a href="/admin" class="nav-item"><span>🏠</span> Přehled</a>
+      <a href="/admin/tabory" class="nav-item active"><span>🏕️</span> Tábory</a>
+      <a href="/admin/seminare" class="nav-item"><span>🎓</span> Semináře</a>
+      <a href="/admin/prihlasky" class="nav-item"><span>📋</span> Přihlášky</a>
+      <a href="/admin/nastaveni" class="nav-item"><span>⚙️</span> Nastavení</a>
+      <a href="/admin/logout" class="nav-item" style="margin-top:16px"><span>🚪</span> Odhlásit</a>
+    </nav>
+  </div>
+  <main class="main">
+    <div class="header">
+      <h1>🏕️ Tábory</h1>
+      <a href="/admin/tabory/novy" class="btn btn-green">+ Přidat tábor</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Název</th><th>Datum</th><th>Cena</th><th>Místa</th><th>Stav</th><th></th></tr></thead>
+        <tbody>
+          {camps.length === 0 && <tr><td colspan="6" style="text-align:center;color:#9ca3af;padding:40px">Žádné tábory. <a href="/admin/tabory/novy" style="color:#3d7a4a">Přidat první tábor →</a></td></tr>}
+          {camps.map(c => (
+            <tr>
+              <td>
+                <div style="font-weight:600">{c.title}</div>
+                {c.poster_url && <img src={c.poster_url} style="height:32px;border-radius:4px;margin-top:4px" />}
+              </td>
+              <td style="color:#6b7280">{formatDate(c.date_from)}</td>
+              <td>{c.price.toLocaleString('cs-CZ')} Kč</td>
+              <td>
+                <span class={`badge ${c.spots_left === 0 ? 'badge-red' : c.spots_left <= 3 ? 'badge-orange' : 'badge-green'}`}>
+                  {c.spots_left}/{c.spots_total}
+                </span>
+              </td>
+              <td><span class={`badge ${c.active ? 'badge-green' : 'badge-gray'}`}>{c.active ? 'Aktivní' : 'Skrytý'}</span></td>
+              <td style="display:flex;gap:8px">
+                <a href={`/admin/tabory/${c.id}`} class="btn btn-gray btn-sm">✏️ Upravit</a>
+                <a href={`/tabory/${c.slug}`} target="_blank" class="btn btn-gray btn-sm">🌐 Web</a>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

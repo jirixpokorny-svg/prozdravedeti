@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #3d7a4a;
+  --color-forest-dark: #2d5c38;
+  --color-forest-light: #5a9e6a;
+  --color-mint: #e8f5ec;
+  --color-cream: #faf8f3;
+  --color-warm: #f5a623;
+  --color-warm-light: #fef3dc;
+  --color-sand: #f0ebe0;
+  --color-text: #2c2c2c;
+  --color-muted: #6b7280;
+
+  --font-display: "Nunito", sans-serif;
+  --font-body: "Inter", sans-serif;
+
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background-color: var(--color-cream);
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+
+  ::selection {
+    background-color: var(--color-mint);
+    color: var(--color-forest-dark);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-[#3d7a4a] hover:bg-[#2d5c38] text-white font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border-2 border-[#3d7a4a] text-[#3d7a4a] hover:bg-[#3d7a4a] hover:text-white font-semibold px-6 py-3 rounded-full transition-all duration-200;
+  }
+
+  .btn-warm {
+    @apply inline-flex items-center gap-2 bg-[#f5a623] hover:bg-[#e0941a] text-white font-semibold px-6 py-3 rounded-full transition-all duration-200 shadow-sm hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden;
+  }
+
+  .section {
+    @apply py-16 px-4 max-w-6xl mx-auto;
+  }
+
+  .input {
+    @apply w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#3d7a4a]/30 focus:border-[#3d7a4a] transition-colors bg-white;
+  }
+
+  .label {
+    @apply block text-sm font-semibold text-[#2c2c2c] mb-1.5;
+  }
+}

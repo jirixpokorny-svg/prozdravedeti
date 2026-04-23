@@ -1,0 +1,110 @@
+---
+import { validateSession, getSessionFromRequest, setPassword } from '../../lib/auth';
+if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
+import { getDb } from '../../lib/db';
+
+let saved = false;
+let error = '';
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const action = form.get('action') as string;
+  const db = getDb();
+
+  if (action === 'email') {
+    const email = form.get('lenka_email') as string;
+    if (email) {
+      db.prepare("INSERT OR REPLACE INTO settings (key,value) VALUES ('lenka_email',?)").run(email);
+      saved = true;
+    }
+  } else if (action === 'password') {
+    const pw = form.get('new_password') as string;
+    const confirm = form.get('confirm_password') as string;
+    if (!pw || pw.length < 8) error = 'Heslo musí mít alespoň 8 znaků.';
+    else if (pw !== confirm) error = 'Hesla se neshodují.';
+    else { setPassword(pw); saved = true; }
+  }
+}
+
+const db = getDb();
+const lenkaEmail = (db.prepare("SELECT value FROM settings WHERE key='lenka_email'").get() as any)?.value || '';
+---
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nastavení – Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #2c2c2c; margin: 0; }
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #2d5c38; color: white; padding: 24px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo img { height: 40px; filter: brightness(0) invert(1); }
+    .sidebar nav { padding: 16px 12px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
+    .main { margin-left: 240px; padding: 32px; max-width: 600px; }
+    h1 { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 800; margin: 0 0 24px; }
+    .card { background: white; border-radius: 20px; padding: 28px; margin-bottom: 20px; }
+    .card h2 { font-family: 'Nunito', sans-serif; font-size: 18px; font-weight: 800; margin: 0 0 16px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+    input { width: 100%; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 10px 14px; font-size: 14px; outline: none; transition: border-color 0.15s; font-family: inherit; }
+    input:focus { border-color: #3d7a4a; box-shadow: 0 0 0 3px rgba(61,122,74,0.1); }
+    .field { margin-bottom: 16px; }
+    .btn { display: inline-flex; align-items: center; padding: 10px 22px; border-radius: 999px; font-size: 14px; font-weight: 700; border: none; cursor: pointer; background: #3d7a4a; color: white; transition: background 0.15s; font-family: 'Nunito', sans-serif; }
+    .btn:hover { background: #2d5c38; }
+    .success { background: #dcfce7; color: #166534; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; font-weight: 600; }
+    .error { background: #fee2e2; color: #dc2626; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo"><img src="/images/logo.png" alt="Logo" /></div>
+    <nav>
+      <a href="/admin" class="nav-item"><span>🏠</span> Přehled</a>
+      <a href="/admin/tabory" class="nav-item"><span>🏕️</span> Tábory</a>
+      <a href="/admin/seminare" class="nav-item"><span>🎓</span> Semináře</a>
+      <a href="/admin/prihlasky" class="nav-item"><span>📋</span> Přihlášky</a>
+      <a href="/admin/nastaveni" class="nav-item active"><span>⚙️</span> Nastavení</a>
+      <a href="/admin/logout" class="nav-item" style="margin-top:16px"><span>🚪</span> Odhlásit</a>
+    </nav>
+  </div>
+  <main class="main">
+    <h1>⚙️ Nastavení</h1>
+
+    {saved && <div class="success">✅ Uloženo!</div>}
+    {error && <div class="error">{error}</div>}
+
+    <div class="card">
+      <h2>📧 Email pro přihlášky</h2>
+      <p style="font-size:14px;color:#6b7280;margin:0 0 16px">Na tento email vám budou chodit nové přihlášky z webu.</p>
+      <form method="POST">
+        <input type="hidden" name="action" value="email" />
+        <div class="field">
+          <label>Váš email</label>
+          <input type="email" name="lenka_email" value={lenkaEmail} required placeholder="info@prozdravedeti.cz" />
+        </div>
+        <button type="submit" class="btn">Uložit email</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>🔒 Změna hesla</h2>
+      <form method="POST">
+        <input type="hidden" name="action" value="password" />
+        <div class="field">
+          <label>Nové heslo</label>
+          <input type="password" name="new_password" required minlength="8" placeholder="Alespoň 8 znaků" />
+        </div>
+        <div class="field">
+          <label>Potvrdit heslo</label>
+          <input type="password" name="confirm_password" required placeholder="Zopakujte heslo" />
+        </div>
+        <button type="submit" class="btn">Změnit heslo</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>

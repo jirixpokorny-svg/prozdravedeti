@@ -1,0 +1,91 @@
+---
+import { validateSession, getSessionFromRequest, checkPassword, createSession, hasPasswordSet, setPassword } from '../../lib/auth';
+
+const token = getSessionFromRequest(Astro.request);
+if (validateSession(token)) return Astro.redirect('/admin');
+
+let error = '';
+let needsSetup = !hasPasswordSet();
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const password = form.get('password') as string;
+  const confirm = form.get('confirm') as string;
+
+  if (needsSetup) {
+    if (!password || password.length < 8) {
+      error = 'Heslo musí mít alespoň 8 znaků.';
+    } else if (password !== confirm) {
+      error = 'Hesla se neshodují.';
+    } else {
+      setPassword(password);
+      const newToken = createSession();
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/admin', 'Set-Cookie': `pzd_admin=${newToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7*24*3600}` },
+      });
+    }
+  } else {
+    if (checkPassword(password)) {
+      const newToken = createSession();
+      return new Response(null, {
+        status: 302,
+        headers: { Location: '/admin', 'Set-Cookie': `pzd_admin=${newToken}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${7*24*3600}` },
+      });
+    } else {
+      error = 'Nesprávné heslo.';
+    }
+  }
+}
+---
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Přihlášení – Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #e8f5ec 0%, #faf8f3 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+    .card { background: white; border-radius: 24px; padding: 40px; width: 100%; max-width: 400px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
+    .logo { text-align: center; margin-bottom: 32px; }
+    .logo img { height: 48px; }
+    h1 { font-family: 'Nunito', sans-serif; font-size: 22px; font-weight: 800; color: #2c2c2c; text-align: center; margin: 0 0 8px; }
+    p.sub { color: #6b7280; font-size: 14px; text-align: center; margin: 0 0 28px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #2c2c2c; margin-bottom: 6px; }
+    input { width: 100%; border: 1.5px solid #e5e7eb; border-radius: 12px; padding: 12px 16px; font-size: 15px; outline: none; transition: border-color 0.15s; font-family: inherit; }
+    input:focus { border-color: #3d7a4a; box-shadow: 0 0 0 3px rgba(61,122,74,0.1); }
+    .field { margin-bottom: 16px; }
+    .error { background: #fee2e2; color: #dc2626; border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-bottom: 16px; }
+    button { width: 100%; background: #3d7a4a; color: white; border: none; border-radius: 999px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Nunito', sans-serif; transition: background 0.15s; margin-top: 4px; }
+    button:hover { background: #2d5c38; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">
+      <img src="/images/logo.png" alt="Pro zdravé děti" />
+    </div>
+    <h1>{needsSetup ? 'Nastavení hesla' : 'Přihlášení do adminu'}</h1>
+    <p class="sub">{needsSetup ? 'Vytvořte si heslo pro přístup do administrace.' : 'Zadejte heslo pro přístup do administrace webu.'}</p>
+
+    {error && <div class="error">{error}</div>}
+
+    <form method="POST">
+      <div class="field">
+        <label for="password">Heslo</label>
+        <input type="password" id="password" name="password" required autofocus placeholder="••••••••" />
+      </div>
+      {needsSetup && (
+        <div class="field">
+          <label for="confirm">Potvrzení hesla</label>
+          <input type="password" id="confirm" name="confirm" required placeholder="••••••••" />
+        </div>
+      )}
+      <button type="submit">{needsSetup ? 'Vytvořit heslo a přihlásit se' : 'Přihlásit se'}</button>
+    </form>
+  </div>
+</body>
+</html>

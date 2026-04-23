@@ -1,0 +1,114 @@
+---
+import { validateSession, getSessionFromRequest } from '../../lib/auth';
+if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
+import { getDb } from '../../lib/db';
+import type { Order } from '../../lib/db';
+
+const db = getDb();
+
+// Mark as processed
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const id = form.get('id');
+  const status = form.get('status');
+  if (id && status) db.prepare("UPDATE orders SET status=? WHERE id=?").run(status, Number(id));
+  return Astro.redirect('/admin/prihlasky');
+}
+
+const orders = db.prepare("SELECT * FROM orders ORDER BY created_at DESC").all() as Order[];
+---
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Přihlášky – Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f3f4f6; color: #2c2c2c; margin: 0; }
+    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: #2d5c38; color: white; padding: 24px 0; }
+    .sidebar-logo { padding: 0 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-logo img { height: 40px; filter: brightness(0) invert(1); }
+    .sidebar nav { padding: 16px 12px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px; font-weight: 600; transition: all 0.15s; margin-bottom: 2px; }
+    .nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.15); color: white; }
+    .main { margin-left: 240px; padding: 32px; }
+    h1 { font-family: 'Nunito', sans-serif; font-size: 28px; font-weight: 800; margin: 0 0 24px; }
+    .table-wrap { background: white; border-radius: 16px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 700px; }
+    thead { background: #f9fafb; }
+    th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; white-space: nowrap; }
+    td { padding: 14px 16px; font-size: 14px; border-top: 1px solid #f3f4f6; vertical-align: top; }
+    tr:hover td { background: #fafafa; }
+    .badge { display: inline-flex; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-orange { background: #fef3c7; color: #92400e; }
+    .btn-sm { display: inline-flex; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; transition: all 0.15s; }
+    .btn-green { background: #dcfce7; color: #166534; }
+    .btn-green:hover { background: #bbf7d0; }
+    .note { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .new-row td { background: #fffbeb; }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo"><img src="/images/logo.png" alt="Logo" /></div>
+    <nav>
+      <a href="/admin" class="nav-item"><span>🏠</span> Přehled</a>
+      <a href="/admin/tabory" class="nav-item"><span>🏕️</span> Tábory</a>
+      <a href="/admin/seminare" class="nav-item"><span>🎓</span> Semináře</a>
+      <a href="/admin/prihlasky" class="nav-item active"><span>📋</span> Přihlášky</a>
+      <a href="/admin/nastaveni" class="nav-item"><span>⚙️</span> Nastavení</a>
+      <a href="/admin/logout" class="nav-item" style="margin-top:16px"><span>🚪</span> Odhlásit</a>
+    </nav>
+  </div>
+  <main class="main">
+    <h1>📋 Přihlášky</h1>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Rodič</th><th>Dítě</th><th>Akce</th><th>Kontakt</th><th>Datum</th><th>Stav</th><th></th></tr>
+        </thead>
+        <tbody>
+          {orders.length === 0 && (
+            <tr><td colspan="7" style="text-align:center;color:#9ca3af;padding:40px">Žádné přihlášky</td></tr>
+          )}
+          {orders.map(o => (
+            <tr class={o.status === 'new' ? 'new-row' : ''}>
+              <td style="font-weight:600">{o.parent_name}</td>
+              <td style="color:#6b7280">{o.child_name !== '-' ? <>{o.child_name}<div class="note">{o.child_age} let</div></> : '—'}</td>
+              <td>
+                <div style="font-weight:600;font-size:13px">{o.item_title}</div>
+                {o.note && <div class="note">📝 {o.note}</div>}
+              </td>
+              <td>
+                <a href={`mailto:${o.email}`} style="color:#3d7a4a;display:block">{o.email}</a>
+                <a href={`tel:${o.phone}`} style="color:#6b7280;font-size:12px">{o.phone}</a>
+              </td>
+              <td style="color:#6b7280;font-size:13px;white-space:nowrap">
+                {new Date(o.created_at).toLocaleDateString('cs-CZ')}<br/>
+                <span style="font-size:11px">{new Date(o.created_at).toLocaleTimeString('cs-CZ', {hour:'2-digit',minute:'2-digit'})}</span>
+              </td>
+              <td>
+                <span class={`badge ${o.status === 'new' ? 'badge-orange' : 'badge-green'}`}>
+                  {o.status === 'new' ? '🔔 Nová' : '✅ Vyřízeno'}
+                </span>
+              </td>
+              <td>
+                {o.status === 'new' && (
+                  <form method="POST" style="display:inline">
+                    <input type="hidden" name="id" value={o.id} />
+                    <input type="hidden" name="status" value="done" />
+                    <button type="submit" class="btn-sm btn-green">✓ Vyřídil/a</button>
+                  </form>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

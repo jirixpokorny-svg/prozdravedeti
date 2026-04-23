@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    container_name: prozdravedeti-web
+    restart: unless-stopped
+    ports:
+      - "4321:4321"
+    volumes:
+      - pzd-data:/data
+      - pzd-uploads:/app/public/uploads
+    env_file:
+      - .env
+
+volumes:
+  pzd-data:
+  pzd-uploads:

@@ -1,0 +1,109 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Pro zdravé děti – výživová poradkyně Lenka',
+  description = 'Certifikovaná výživová poradkyně se specializací na výživu dětí. Příměstské tábory, semináře, konzultace v Písku.',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="icon" type="image/png" href="/images/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="bg-[#faf8f3] min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100 shadow-sm">
+    <nav class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3 group">
+        <img src="/images/logo.png" alt="Pro zdravé děti" class="h-10 w-auto" />
+      </a>
+      <div class="hidden md:flex items-center gap-1">
+        <a href="/tabory" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Tábory</a>
+        <a href="/seminare" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Semináře & kurzy</a>
+        <a href="/o-mne" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">O mně</a>
+        <a href="/poradenstvi" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poradenství</a>
+        <a href="/#kontakt" class="btn-primary ml-2 text-sm !py-2">Kontakt</a>
+      </div>
+      <!-- Mobile menu button -->
+      <button id="menu-btn" class="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </nav>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 pb-4">
+      <div class="flex flex-col gap-1 pt-3">
+        <a href="/tabory" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Tábory</a>
+        <a href="/seminare" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Semináře & kurzy</a>
+        <a href="/o-mne" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">O mně</a>
+        <a href="/poradenstvi" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poradenství</a>
+        <a href="/#kontakt" class="btn-primary mt-1 text-sm justify-center">Kontakt</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1">
+    <slot />
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#2d5c38] text-white mt-16">
+    <div class="max-w-6xl mx-auto px-4 py-12 grid md:grid-cols-3 gap-8">
+      <div>
+        <img src="/images/logo-vertical.png" alt="Pro zdravé děti" class="h-16 w-auto brightness-0 invert mb-4" />
+        <p class="text-green-200 text-sm leading-relaxed">Certifikovaná výživová poradkyně se specializací na výživu dětí.</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-lg mb-3">Nabídka</h3>
+        <ul class="space-y-2 text-green-200 text-sm">
+          <li><a href="/tabory" class="hover:text-white transition-colors">Příměstské tábory</a></li>
+          <li><a href="/seminare" class="hover:text-white transition-colors">Semináře & kurzy</a></li>
+          <li><a href="/poradenstvi" class="hover:text-white transition-colors">Výživové poradenství</a></li>
+          <li><a href="/o-mne" class="hover:text-white transition-colors">O mně</a></li>
+        </ul>
+      </div>
+      <div id="kontakt">
+        <h3 class="font-bold text-lg mb-3">Kontakt</h3>
+        <ul class="space-y-2 text-green-200 text-sm">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+            <a href="mailto:info@prozdravedeti.cz" class="hover:text-white transition-colors">info@prozdravedeti.cz</a>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.948V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <a href="tel:+420725757041" class="hover:text-white transition-colors">+420 725 757 041</a>
+          </li>
+          <li class="flex items-start gap-2">
+            <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Na Pakšovce 2270, 397 01 Písek<br/>IČ: 88631681</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-green-700 py-4 text-center text-green-300 text-xs">
+      © {new Date().getFullYear()} Pro zdravé děti – Lenka Pokorná
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+  </script>
+</body>
+</html>

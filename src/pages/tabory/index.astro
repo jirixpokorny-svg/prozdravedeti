@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getDb } from '../../lib/db';
+import { formatDate, formatPrice } from '../../lib/slugify';
+import type { Camp } from '../../lib/db';
+
+const db = getDb();
+const upcoming = db.prepare("SELECT * FROM camps WHERE active=1 AND date(date_from) >= date('now') ORDER BY sort_order, date_from").all() as Camp[];
+const past = db.prepare("SELECT * FROM camps WHERE active=1 AND date(date_from) < date('now') ORDER BY date_from DESC LIMIT 6").all() as Camp[];
+---
+
+<Layout title="Příměstské tábory – Pro zdravé děti" description="Kulinářské příměstské tábory pro děti v Písku. Vaření, zdravá výživa, zábava.">
+  <section class="bg-gradient-to-br from-[#e8f5ec] to-[#faf8f3] py-16">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <span class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm">
+        🏕️ Každé léto v Písku
+      </span>
+      <h1 class="text-4xl md:text-5xl font-black text-[#2c2c2c] mb-4">Příměstské tábory</h1>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Týden plný vaření, objevování nových chutí a zdravého jídla. Děti se naučí vařit, ochutnávat a rozumět tomu, co jedí.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    {upcoming.length === 0 ? (
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🌱</div>
+        <h2 class="text-2xl font-bold text-gray-700 mb-2">Brzy vyhlásíme termíny</h2>
+        <p class="text-gray-500">Sledujte nás nebo nám napište na <a href="mailto:info@prozdravedeti.cz" class="text-[#3d7a4a] font-semibold">info@prozdravedeti.cz</a></p>
+      </div>
+    ) : (
+      <>
+        <h2 class="text-2xl font-bold text-[#2c2c2c] mb-6">Nadcházející tábory {new Date().getFullYear()}</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {upcoming.map(camp => (
+            <a href={`/tabory/${camp.slug}`} class="card group block">
+              {camp.poster_url ? (
+                <img src={camp.poster_url} alt={camp.title} class="w-full aspect-[3/4] object-cover" />
+              ) : (
+                <div class="w-full aspect-[3/4] bg-gradient-to-br from-[#e8f5ec] to-[#f0ebe0] flex items-center justify-center">
+                  <span class="text-7xl">🏕️</span>
+                </div>
+              )}
+              <div class="p-5">
+                <div class="flex items-center gap-2 mb-2 flex-wrap">
+                  {camp.spots_left === 0 && <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">Obsazeno</span>}
+                  {camp.spots_left > 0 && camp.spots_left <= 3 && <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600">Poslední {camp.spots_left} místa!</span>}
+                  {camp.spots_left > 3 && <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-[#e8f5ec] text-[#3d7a4a]">{camp.spots_left} volných míst</span>}
+                  {camp.age_range && <span class="text-xs text-gray-500">věk {camp.age_range}</span>}
+                </div>
+                <h3 class="font-bold text-lg text-[#2c2c2c] group-hover:text-[#3d7a4a] transition-colors mb-1">{camp.title}</h3>
+                <p class="text-sm text-gray-500 mb-1">📅 {formatDate(camp.date_from)}{camp.date_to ? ` – ${formatDate(camp.date_to)}` : ''}</p>
+                {camp.time_info && <p class="text-sm text-gray-500 mb-1">🕐 {camp.time_info}</p>}
+                <p class="text-sm text-gray-500 mb-3">📍 {camp.location}</p>
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-[#3d7a4a] text-xl">{formatPrice(camp.price)}</span>
+                  <span class="text-sm text-[#3d7a4a] font-semibold group-hover:underline">Více info →</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </>
+    )}
+
+    {past.length > 0 && (
+      <div class="border-t border-gray-200 pt-10">
+        <h2 class="text-xl font-bold text-gray-400 mb-4">Proběhlé tábory</h2>
+        <div class="grid md:grid-cols-3 gap-4">
+          {past.map(camp => (
+            <a href={`/tabory/${camp.slug}`} class="flex items-center gap-3 p-4 rounded-xl hover:bg-white transition-colors">
+              {camp.poster_url
+                ? <img src={camp.poster_url} alt={camp.title} class="w-16 h-16 rounded-xl object-cover flex-shrink-0 opacity-60" />
+                : <div class="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center text-2xl flex-shrink-0">🏕️</div>
+              }
+              <div>
+                <p class="font-semibold text-gray-500 text-sm">{camp.title}</p>
+                <p class="text-xs text-gray-400">{formatDate(camp.date_from)}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </section>
+</Layout>

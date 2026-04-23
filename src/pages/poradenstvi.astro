@@ -1,0 +1,58 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Výživové poradenství – Pro zdravé děti" description="Osobní konzultace výživy dětí, těhotenství a kojení. Lenka Pokorná, Písek.">
+  <section class="bg-gradient-to-br from-[#e8f5ec] to-[#faf8f3] py-16">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <span class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm">💬 Osobní i online</span>
+      <h1 class="text-4xl font-black text-[#2c2c2c] mb-3">Výživové poradenství</h1>
+      <p class="text-lg text-gray-600">Konzultace šité přesně na míru vaší rodině</p>
+    </div>
+  </section>
+
+  <section class="max-w-3xl mx-auto px-4 py-12">
+    <div class="grid md:grid-cols-2 gap-6 mb-10">
+      {[
+        { icon: '🤰', title: 'Těhotenství & kojení', desc: 'Jak správně jíst v těhotenství a při kojení, aby bylo miminko zdravé a vy plné energie.' },
+        { icon: '🍼', title: 'Příkrmy a kojenci', desc: 'Kdy a jak začít s příkrmy, jaké potraviny zavádět a jak z kojence udělat odvážného jedlíka.' },
+        { icon: '🧒', title: 'Výživa dětí', desc: 'Zdravá školní svačina, vyvážený jídelníček, odmítání jídla, výběrovost — pomůžu vám to zvládnout.' },
+        { icon: '⚖️', title: 'Úprava hmotnosti', desc: 'Zdravé přibírání nebo snižování váhy pro celou rodinu bez drastických diet.' },
+      ].map(s => (
+        <div class="card p-6">
+          <div class="text-3xl mb-3">{s.icon}</div>
+          <h3 class="font-bold text-lg mb-2">{s.title}</h3>
+          <p class="text-gray-500 text-sm leading-relaxed">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="card p-8 mb-8">
+      <h2 class="text-2xl font-bold mb-4">Jak probíhá konzultace?</h2>
+      <div class="space-y-4">
+        {[
+          { num: '1', title: 'Úvodní konzultace (60 min)', desc: 'Rozebereme vaši situaci, cíle a aktuální stravovací návyky. Online nebo osobně v Písku.' },
+          { num: '2', title: 'Individuální plán', desc: 'Dostanete konkrétní doporučení a jídelní plán šitý na míru vašemu dítěti a rodině.' },
+          { num: '3', title: 'Navazující konzultace', desc: 'Sledujeme pokrok, upravujeme plán a odpovídáme na otázky, které přijdou v průběhu.' },
+        ].map(step => (
+          <div class="flex gap-4">
+            <div class="w-8 h-8 bg-[#3d7a4a] text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">{step.num}</div>
+            <div>
+              <h4 class="font-bold text-[#2c2c2c]">{step.title}</h4>
+              <p class="text-gray-500 text-sm mt-0.5">{step.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="bg-[#3d7a4a] rounded-2xl p-8 text-center text-white">
+      <h2 class="text-2xl font-bold mb-2">Objednejte se</h2>
+      <p class="text-green-200 mb-6">Napište mi nebo zavolejte — ráda odpovím na první dotazy zdarma.</p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] font-bold px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">✉️ Napsat email</a>
+        <a href="tel:+420725757041" class="inline-flex items-center gap-2 bg-[#2d5c38] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#1e3f26] transition-colors">📞 Zavolat</a>
+      </div>
+    </div>
+  </section>
+</Layout>
