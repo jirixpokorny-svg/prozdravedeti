@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import { getPhotoUrl } from '../lib/photos';
 const photoOmnePage = getPhotoUrl('lenka-o-mne-page');
+const photoProace = getPhotoUrl('prace-rodiny');
+const photoSpoluprace = getPhotoUrl('spoluprace');
 ---
 
 <Layout title="O mně – Lenka Pokorná | Pro zdravé děti" description="Certifikovaná výživová poradkyně se specializací na výživu dětí. Lenka Pokorná, Písek.">
@@ -53,12 +55,17 @@ const photoOmnePage = getPhotoUrl('lenka-o-mne-page');
           </p>
         </div>
       </div>
-      <!-- Foto placeholder 2 -->
-      <div class="aspect-square max-w-sm mx-auto rounded-3xl bg-gradient-to-br from-[#fef3dc] to-[#e8f5ec] border-2 border-dashed border-[#f5a623]/40 flex flex-col items-center justify-center text-center p-8">
-        <div class="text-5xl mb-3">👶</div>
-        <p class="text-[#c07818] font-semibold text-sm">Fotka z práce s rodinami</p>
-        <p class="text-gray-400 text-xs mt-1">Placeholder pro fotografii</p>
-      </div>
+      <!-- Foto práce s rodinami -->
+      {photoProace ? (
+        <div class="aspect-square max-w-sm mx-auto rounded-3xl overflow-hidden shadow-lg">
+          <img src={photoProace} alt="Práce s rodinami" class="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <div class="aspect-square max-w-sm mx-auto rounded-3xl bg-gradient-to-br from-[#fef3dc] to-[#e8f5ec] border-2 border-dashed border-[#f5a623]/40 flex flex-col items-center justify-center text-center p-8">
+          <div class="text-5xl mb-3">👶</div>
+          <p class="text-[#c07818] font-semibold text-sm">Fotka z práce s rodinami</p>
+        </div>
+      )}
     </div>
   </section>
 
@@ -112,12 +119,17 @@ const photoOmnePage = getPhotoUrl('lenka-o-mne-page');
   <!-- Spolupráce -->
   <section class="max-w-5xl mx-auto px-4 py-14">
     <div class="grid md:grid-cols-2 gap-12 items-center">
-      <!-- Foto placeholder 3 -->
-      <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-[#e8f5ec] to-[#faf8f3] border-2 border-dashed border-[#3d7a4a]/30 flex flex-col items-center justify-center text-center p-8">
-        <div class="text-5xl mb-3">🏫</div>
-        <p class="text-[#3d7a4a] font-semibold text-sm">Fotka ze spolupráce / workshopu</p>
-        <p class="text-gray-400 text-xs mt-1">Placeholder pro fotografii</p>
-      </div>
+      <!-- Foto spolupráce -->
+      {photoSpoluprace ? (
+        <div class="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg">
+          <img src={photoSpoluprace} alt="Spolupráce a workshopy" class="w-full h-full object-cover" />
+        </div>
+      ) : (
+        <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-[#e8f5ec] to-[#faf8f3] border-2 border-dashed border-[#3d7a4a]/30 flex flex-col items-center justify-center text-center p-8">
+          <div class="text-5xl mb-3">🏫</div>
+          <p class="text-[#3d7a4a] font-semibold text-sm">Fotka ze spolupráce / workshopu</p>
+        </div>
+      )}
       <div>
         <h2 class="text-3xl font-black text-[#2c2c2c] mb-4">Spolupráce</h2>
         <p class="text-gray-600 leading-relaxed mb-6">

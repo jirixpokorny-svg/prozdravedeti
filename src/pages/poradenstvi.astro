@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getPhotoUrl } from '../lib/photos';
+import type { PhotoSlotKey } from '../lib/photos';
 
 const services = [
   {
@@ -78,6 +80,10 @@ const services = [
     ],
   },
 ];
+
+const servicePhotos = Object.fromEntries(
+  services.map(s => [s.slug, getPhotoUrl(`sluzba-${s.slug}` as PhotoSlotKey)])
+);
 ---
 
 <Layout title="S čím vám pomůžu – Pro zdravé děti" description="Výživové poradenství pro těhotné, kojící maminky, příkrmy, výživa dětí od 1 roku, úprava hmotnosti. Lenka Pokorná, Písek.">
@@ -120,12 +126,17 @@ const services = [
             </a>
           </div>
         </div>
-        <!-- Foto placeholder -->
-        <div class={`aspect-[4/3] rounded-3xl bg-gradient-to-br ${s.color} border-2 border-dashed flex flex-col items-center justify-center text-center p-8`} style={`border-color:${s.accent}30`}>
-          <div class="text-5xl mb-3">{s.icon}</div>
-          <p class="font-semibold text-sm" style={`color:${s.accent}`}>Fotografie — {s.title}</p>
-          <p class="text-gray-400 text-xs mt-1">Placeholder, foto doplní majitel</p>
-        </div>
+        <!-- Foto -->
+        {servicePhotos[s.slug] ? (
+          <div class="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg">
+            <img src={servicePhotos[s.slug]!} alt={s.title} class="w-full h-full object-cover" />
+          </div>
+        ) : (
+          <div class={`aspect-[4/3] rounded-3xl bg-gradient-to-br ${s.color} border-2 border-dashed flex flex-col items-center justify-center text-center p-8`} style={`border-color:${s.accent}30`}>
+            <div class="text-5xl mb-3">{s.icon}</div>
+            <p class="font-semibold text-sm" style={`color:${s.accent}`}>Fotografie — {s.title}</p>
+          </div>
+        )}
       </div>
     ))}
   </section>

@@ -10,6 +10,8 @@ const camps = db.prepare("SELECT * FROM camps WHERE active=1 AND date(date_from)
 const seminars = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_from) >= date('now') ORDER BY sort_order, date_from LIMIT 3").all() as Seminar[];
 const photoHero = getPhotoUrl('lenka-hero');
 const photoOmne = getPhotoUrl('lenka-o-mne');
+const photoWorkshop = getPhotoUrl('workshop');
+const photoTaborCta = getPhotoUrl('tabor-cta');
 
 const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminars.map(s => ({...s, kind: 'seminar' as const}))]
   .sort((a, b) => a.date_from.localeCompare(b.date_from))
@@ -264,11 +266,16 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
 
         <!-- Foto -->
         <div class="flex justify-center">
-          <div class="aspect-[4/3] w-full max-w-sm rounded-[2.5rem] bg-gradient-to-br from-[#e8f5ec] to-[#d0ebd8] border-2 border-dashed border-[#3d7a4a]/25 flex flex-col items-center justify-center text-center p-8 shadow-lg">
-            <div class="text-6xl mb-4">🥦</div>
-            <p class="text-[#3d7a4a] font-bold text-sm">Foto z konzultace / workshopu</p>
-            <p class="text-gray-400 text-xs mt-1">Přirozená atmosféra, vaření s dětmi</p>
-          </div>
+          {photoWorkshop ? (
+            <div class="aspect-[4/3] w-full max-w-sm rounded-[2.5rem] overflow-hidden shadow-lg">
+              <img src={photoWorkshop} alt="Konzultace a workshop" class="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div class="aspect-[4/3] w-full max-w-sm rounded-[2.5rem] bg-gradient-to-br from-[#e8f5ec] to-[#d0ebd8] border-2 border-dashed border-[#3d7a4a]/25 flex flex-col items-center justify-center text-center p-8 shadow-lg">
+              <div class="text-6xl mb-4">🥦</div>
+              <p class="text-[#3d7a4a] font-bold text-sm">Foto z konzultace / workshopu</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -290,11 +297,16 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
         </div>
         <!-- Foto tábor -->
         <div class="flex justify-center">
-          <div class="aspect-[4/3] w-full max-w-xs rounded-3xl bg-white/10 border-2 border-dashed border-white/30 flex flex-col items-center justify-center text-center p-8">
-            <div class="text-6xl mb-3">🏕️</div>
-            <p class="text-white font-bold text-sm">Foto z tábora</p>
-            <p class="text-green-300 text-xs mt-1">Děti při vaření, skupinové foto</p>
-          </div>
+          {photoTaborCta ? (
+            <div class="aspect-[4/3] w-full max-w-xs rounded-3xl overflow-hidden shadow-lg">
+              <img src={photoTaborCta} alt="Příměstský tábor" class="w-full h-full object-cover" />
+            </div>
+          ) : (
+            <div class="aspect-[4/3] w-full max-w-xs rounded-3xl bg-white/10 border-2 border-dashed border-white/30 flex flex-col items-center justify-center text-center p-8">
+              <div class="text-6xl mb-3">🏕️</div>
+              <p class="text-white font-bold text-sm">Foto z tábora</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
