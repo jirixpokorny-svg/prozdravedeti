@@ -30,8 +30,8 @@ export const POST: APIRoute = async ({ request }) => {
     db.prepare(`INSERT INTO orders (type, item_id, item_title, child_name, child_age, parent_name, email, phone, note)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`).run(type, Number(item_id), item_title, child_name || '-', child_age || '-', parent_name, email, phone, note || null);
 
-    // Send emails
-    await sendOrderEmails({
+    // Send emails — fire-and-forget so email errors don't fail a saved order
+    sendOrderEmails({
       item_title,
       child_name: child_name || '-',
       child_age: child_age || '-',
@@ -42,7 +42,7 @@ export const POST: APIRoute = async ({ request }) => {
       price: item.price ?? 0,
       date_from: item.date_from,
       location: item.location,
-    });
+    }).catch((err) => console.error('Email send failed:', err));
 
     return new Response(JSON.stringify({ ok: true }), { status: 200 });
   } catch (err: any) {
