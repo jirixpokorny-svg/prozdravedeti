@@ -1,0 +1,73 @@
+---
+import { validateSession, getSessionFromRequest } from '../../../lib/auth';
+if (!validateSession(getSessionFromRequest(Astro.request))) return Astro.redirect('/admin/login');
+import { getDb } from '../../../lib/db';
+import type { Seminar } from '../../../lib/db';
+import { saveUpload, deleteUpload } from '../../../lib/upload';
+
+const { id } = Astro.params;
+const db = getDb();
+let seminar = db.prepare("SELECT * FROM seminars WHERE id = ?").get(Number(id)) as Seminar | undefined;
+if (!seminar) return Astro.redirect('/admin/seminare');
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const title = form.get('title') as string;
+  const date_from = form.get('date_from') as string;
+  const time_info = (form.get('time_info') as string) || null;
+  const location = form.get('location') as string;
+  const priceRaw = ((form.get('price') as string) || '').trim();
+  const price = priceRaw ? Number(priceRaw) : null;
+  const description = form.get('description') as string;
+  const active = form.get('active') === '1' ? 1 : 0;
+  const sort_order = Number(form.get('sort_order')) || 0;
+  const remove_poster = form.get('remove_poster') === '1';
+
+  let poster_url = seminar.poster_url;
+
+  if (remove_poster && poster_url) {
+    deleteUpload(poster_url);
+    poster_url = null;
+  }
+
+  const posterFile = form.get('poster') as File | null;
+  if (posterFile && posterFile.size > 0) {
+    deleteUpload(poster_url);
+    poster_url = await saveUpload(posterFile, 'seminar');
+  }
+
+  db.prepare(`UPDATE seminars SET title=?,date_from=?,time_info=?,location=?,price=?,description=?,poster_url=?,active=?,sort_order=? WHERE id=?`)
+    .run(title, date_from, time_info, location, price, description, poster_url, active, sort_order, Number(id));
+
+  return Astro.redirect('/admin/seminare');
+}
+
+import AdminSeminarForm from '../../../components/AdminSeminarForm.astro';
+---
+
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upravit seminář – Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div style="position:fixed;left:0;top:0;bottom:0;width:240px;background:#2d5c38;padding:24px 0;">
+    <div style="padding:0 20px 24px;border-bottom:1px solid rgba(255,255,255,0.1)">
+      <img src="/images/logo.png" style="height:40px;filter:brightness(0) invert(1)" alt="Logo" />
+    </div>
+    <nav style="padding:16px 12px">
+      <a href="/admin" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;margin-bottom:2px">🏠 Přehled</a>
+      <a href="/admin/tabory" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;margin-bottom:2px">🏕️ Tábory</a>
+      <a href="/admin/seminare" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.15);color:white;text-decoration:none;font-size:14px;font-weight:600;margin-bottom:2px">🎓 Semináře</a>
+      <a href="/admin/prihlasky" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;margin-bottom:2px">📋 Přihlášky</a>
+      <a href="/admin/nastaveni" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;margin-bottom:2px">⚙️ Nastavení</a>
+      <a href="/admin/logout" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;font-weight:600;margin-top:16px">🚪 Odhlásit</a>
+    </nav>
+  </div>
+  <main style="margin-left:240px;padding:32px;max-width:900px">
+    <AdminSeminarForm seminar={seminar} action={`/admin/seminare/${id}`} backUrl="/admin/seminare" />
+  </main>
+</body>
+</html>

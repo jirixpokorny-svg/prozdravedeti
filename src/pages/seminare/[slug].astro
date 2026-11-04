@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import FlyerZoom from '../../components/FlyerZoom.astro';
 import { getDb } from '../../lib/db';
 import { formatDate, formatPrice } from '../../lib/slugify';
 import type { Seminar } from '../../lib/db';
@@ -17,7 +18,7 @@ if (!seminar) return Astro.redirect('/seminare');
     <div class="grid md:grid-cols-2 gap-10 items-start">
       <div>
         {seminar.poster_url
-          ? <img src={seminar.poster_url} alt={seminar.title} class="w-full rounded-3xl shadow-lg" />
+          ? <FlyerZoom src={seminar.poster_url} alt={seminar.title} />
           : <div class="w-full aspect-[3/4] bg-gradient-to-br from-[#fef3dc] to-[#f0ebe0] rounded-3xl flex items-center justify-center text-8xl shadow-inner">🎓</div>
         }
       </div>

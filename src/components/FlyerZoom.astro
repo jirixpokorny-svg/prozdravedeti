@@ -1,0 +1,141 @@
+---
+// Leták s lupou při najetí myší (desktop) a zvětšením přes celou obrazovku po kliknutí / tapnutí.
+interface Props {
+  src: string;
+  alt: string;
+}
+
+const { src, alt } = Astro.props;
+---
+
+<figure class="flyer-zoom">
+  <button type="button" class="flyer-zoom__frame" aria-label={`Zvětšit leták: ${alt}`}>
+    <img src={src} alt={alt} class="flyer-zoom__img" />
+  </button>
+  <figcaption class="flyer-zoom__hint">
+    <span class="hidden md:inline">🔍 Najeďte myší pro detail, kliknutím leták zvětšíte</span>
+    <span class="md:hidden">🔍 Klepnutím leták zvětšíte</span>
+  </figcaption>
+
+  <dialog class="flyer-zoom__dialog" aria-label={alt}>
+    <button type="button" class="flyer-zoom__close" aria-label="Zavřít">✕</button>
+    <div class="flyer-zoom__scroll">
+      <img src={src} alt={alt} class="flyer-zoom__full" />
+    </div>
+  </dialog>
+</figure>
+
+<style>
+  .flyer-zoom__frame {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.15);
+    cursor: zoom-in;
+  }
+  .flyer-zoom__img {
+    display: block;
+    width: 100%;
+    transition: transform 0.15s ease-out;
+    transform-origin: center;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .flyer-zoom__frame:hover .flyer-zoom__img { transform: scale(2.2); }
+  }
+  .flyer-zoom__hint {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+  .flyer-zoom__dialog {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(20 20 20 / 0.94);
+  }
+  .flyer-zoom__dialog::backdrop { background: rgb(0 0 0 / 0.6); }
+  .flyer-zoom__scroll {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    -webkit-overflow-scrolling: touch;
+  }
+  .flyer-zoom__full {
+    margin: auto;
+    max-width: 100%;
+    height: auto;
+    cursor: zoom-in;
+  }
+  .flyer-zoom__dialog.is-natural .flyer-zoom__full {
+    max-width: none;
+    cursor: zoom-out;
+  }
+  .flyer-zoom__close {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 1;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 0;
+    background: white;
+    color: #2c2c2c;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 0.3);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.flyer-zoom').forEach(root => {
+    const frame = root.querySelector<HTMLButtonElement>('.flyer-zoom__frame')!;
+    const img = root.querySelector<HTMLImageElement>('.flyer-zoom__img')!;
+    const dialog = root.querySelector<HTMLDialogElement>('.flyer-zoom__dialog')!;
+    const full = root.querySelector<HTMLImageElement>('.flyer-zoom__full')!;
+
+    // Lupa: střed zvětšení sleduje kurzor
+    frame.addEventListener('mousemove', e => {
+      const r = frame.getBoundingClientRect();
+      img.style.transformOrigin = `${((e.clientX - r.left) / r.width) * 100}% ${((e.clientY - r.top) / r.height) * 100}%`;
+    });
+
+    frame.addEventListener('click', () => {
+      dialog.classList.remove('is-natural');
+      dialog.showModal();
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Klik na leták v náhledu přepíná mezi „na šířku obrazovky“ a originální velikostí
+    full.addEventListener('click', e => {
+      e.stopPropagation();
+      const wasFit = !dialog.classList.contains('is-natural');
+      const fx = e.offsetX / full.clientWidth;
+      const fy = e.offsetY / full.clientHeight;
+      dialog.classList.toggle('is-natural');
+      if (wasFit) {
+        const scroller = root.querySelector<HTMLElement>('.flyer-zoom__scroll')!;
+        scroller.scrollLeft = fx * full.clientWidth - scroller.clientWidth / 2;
+        scroller.scrollTop = fy * full.clientHeight - scroller.clientHeight / 2;
+      }
+    });
+
+    const close = () => dialog.close();
+    root.querySelector('.flyer-zoom__close')!.addEventListener('click', close);
+    dialog.addEventListener('click', e => {
+      if ((e.target as HTMLElement).classList.contains('flyer-zoom__scroll')) close();
+    });
+    dialog.addEventListener('close', () => { document.body.style.overflow = ''; });
+  });
+</script>

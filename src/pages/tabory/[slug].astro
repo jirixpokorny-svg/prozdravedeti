@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import FlyerZoom from '../../components/FlyerZoom.astro';
 import { getDb } from '../../lib/db';
 import { formatDate, formatPrice } from '../../lib/slugify';
 import type { Camp } from '../../lib/db';
@@ -26,8 +27,7 @@ const fewSpots = camp.spots_left > 0 && camp.spots_left <= 3;
       <!-- Leták -->
       <div>
         {camp.poster_url ? (
-          <img src={camp.poster_url} alt={camp.title}
-               class="w-full rounded-3xl shadow-lg object-cover" />
+          <FlyerZoom src={camp.poster_url} alt={camp.title} />
         ) : (
           <div class="w-full aspect-[3/4] bg-gradient-to-br from-[#e8f5ec] to-[#f0ebe0] rounded-3xl flex items-center justify-center text-8xl shadow-inner">
             🏕️
