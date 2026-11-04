@@ -16,6 +16,7 @@ if (Astro.request.method === 'POST') {
 }
 
 const orders = db.prepare("SELECT * FROM orders ORDER BY created_at DESC").all() as Order[];
+const TYPE_LABEL: Record<string, string> = { camp: 'Tábor', seminar: 'Kurz', consultation: 'Konzultace', voucher: 'Poukaz', contact: 'Dotaz' };
 ---
 
 <!DOCTYPE html>
@@ -68,7 +69,7 @@ const orders = db.prepare("SELECT * FROM orders ORDER BY created_at DESC").all()
     <div class="table-wrap">
       <table>
         <thead>
-          <tr><th>Rodič</th><th>Dítě</th><th>Akce</th><th>Kontakt</th><th>Datum</th><th>Stav</th><th></th></tr>
+          <tr><th>Jméno</th><th>Dítě</th><th>Co</th><th>Kontakt</th><th>Datum</th><th>Stav</th><th></th></tr>
         </thead>
         <tbody>
           {orders.length === 0 && (
@@ -79,8 +80,11 @@ const orders = db.prepare("SELECT * FROM orders ORDER BY created_at DESC").all()
               <td style="font-weight:600">{o.parent_name}</td>
               <td style="color:#6b7280">{o.child_name !== '-' ? <>{o.child_name}<div class="note">{o.child_age} let</div></> : '—'}</td>
               <td>
+                <div class="note" style="text-transform:uppercase;letter-spacing:.04em">{TYPE_LABEL[o.type] || o.type} · č. {o.id}</div>
                 <div style="font-weight:600;font-size:13px">{o.item_title}</div>
-                {o.note && <div class="note">📝 {o.note}</div>}
+                {o.variant && <div class="note">{o.variant}</div>}
+                {o.amount ? <div class="note" style="color:#3d7a4a;font-weight:600">{o.amount.toLocaleString('cs-CZ')} Kč</div> : null}
+                {o.note && <div class="note" style="white-space:pre-line">📝 {o.note}</div>}
               </td>
               <td>
                 <a href={`mailto:${o.email}`} style="color:#3d7a4a;display:block">{o.email}</a>

@@ -88,6 +88,21 @@ function initSchema(db: Database.Database) {
     db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)").run('lenka_email', 'info@prozdravedeti.cz');
     db.prepare("INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)").run('admin_password_hash', '');
   }
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS newsletter (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      email TEXT UNIQUE NOT NULL,
+      source TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+  `);
+
+  // Migrace – sloupec už může existovat
+  const addColumn = (sql: string) => { try { db.exec(sql); } catch {} };
+  addColumn(`ALTER TABLE seminars ADD COLUMN price_options TEXT`);
+  addColumn(`ALTER TABLE orders ADD COLUMN variant TEXT`);
+  addColumn(`ALTER TABLE orders ADD COLUMN amount INTEGER`);
 }
 
 export type Camp = {
@@ -118,9 +133,22 @@ export type Seminar = {
   price: number | null;
   description: string;
   poster_url: string | null;
+  price_options: string | null;
   active: number;
   sort_order: number;
 };
+
+export type PriceOption = { label: string; price: number };
+
+/** price_options: jeden řádek = „Název | cena“, např. „Dospělý + 1x dítě | 990“ */
+export function parsePriceOptions(text: string | null | undefined): PriceOption[] {
+  return (text || '').split(/\r?\n/).map(l => l.split('|')).filter(p => p.length === 2 && p[0].trim() && /^\s*\d+\s*$/.test(p[1]))
+    .map(([label, price]) => ({ label: label.trim(), price: Number(price.trim()) }));
+}
+
+export function getSetting(key: string): string {
+  return (getDb().prepare("SELECT value FROM settings WHERE key = ?").get(key) as { value: string } | undefined)?.value || '';
+}
 
 export type Order = {
   id: number;
@@ -134,5 +162,7 @@ export type Order = {
   phone: string;
   note: string | null;
   status: string;
+  variant: string | null;
+  amount: number | null;
   created_at: string;
 };

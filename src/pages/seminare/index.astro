@@ -6,10 +6,10 @@ import type { Seminar } from '../../lib/db';
 
 const db = getDb();
 const upcoming = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_from) >= date('now') ORDER BY sort_order, date_from").all() as Seminar[];
-const past = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_from) < date('now') ORDER BY date_from DESC LIMIT 6").all() as Seminar[];
+const past = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_from) < date('now') ORDER BY date_from DESC LIMIT 12").all() as Seminar[];
 ---
 
-<Layout title="Semináře a kurzy – Pro zdravé děti" description="Semináře, workshopy a kurzy o výživě dětí. Online i prezenčně v Písku.">
+<Layout title="Semináře a kurzy – Pro zdravé děti" description="Semináře, workshopy a kurzy vaření o výživě dětí a zdravém stravování v Písku a okolí.">
   <section class="bg-gradient-to-br from-[#fef3dc] to-[#faf8f3] py-16">
     <div class="max-w-6xl mx-auto px-4 text-center">
       <span class="inline-flex items-center gap-2 bg-white text-[#c07818] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm">
@@ -45,7 +45,7 @@ const past = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_fro
               <p class="text-sm text-gray-500 mb-3">📍 {seminar.location}</p>
               {seminar.price !== null
                 ? <span class="font-bold text-[#3d7a4a]">{formatPrice(seminar.price)}</span>
-                : <span class="text-sm text-[#3d7a4a] font-semibold">Zdarma / na vyžádání</span>
+                : <span class="text-sm text-[#3d7a4a] font-semibold">Cena na vyžádání</span>
               }
             </div>
           </a>
@@ -58,13 +58,13 @@ const past = db.prepare("SELECT * FROM seminars WHERE active=1 AND date(date_fro
         <h2 class="text-lg font-bold text-gray-400 mb-4">Proběhlé akce</h2>
         <div class="grid md:grid-cols-2 gap-3">
           {past.map(s => (
-            <div class="flex items-center gap-3 p-3 rounded-xl text-gray-400">
+            <a href={`/seminare/${s.slug}`} class="flex items-center gap-3 p-3 rounded-xl text-gray-400 hover:bg-white hover:text-gray-600 transition-colors">
               <span class="text-2xl">🎓</span>
               <div>
                 <p class="font-semibold text-sm">{s.title}</p>
                 <p class="text-xs">{formatDate(s.date_from)} · {s.location}</p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>

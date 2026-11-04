@@ -51,7 +51,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
             Jíst zdravě nemusí být žádná fuška.
           </p>
           <p class="text-lg text-gray-600 leading-relaxed mb-8">
-            Může to být kulinářské dobrodružství pro celou rodinu — od nejmenšího miminka až po školáka.
+            Může to být kulinářské dobrodružství.
           </p>
           <div class="flex flex-wrap gap-3 mb-8">
             <a href="/poradenstvi" class="btn-primary">💬 Objednat konzultaci</a>
@@ -105,7 +105,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
       <div class="flex items-end justify-between mb-8 gap-4">
         <div>
           <h2 class="text-3xl font-black text-[#2c2c2c]">Nejbližší akce</h2>
-          <p class="text-gray-500 mt-1">Míst je vždy málo — přihlaste se včas!</p>
+          <p class="text-gray-500 mt-1">Tábory, kurzy vaření a semináře, na které se můžete přihlásit.</p>
         </div>
         <div class="hidden sm:flex gap-3 flex-shrink-0">
           <a href="/tabory" class="btn-outline text-sm">Všechny tábory</a>
@@ -164,10 +164,10 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
             Jsem certifikovaná výživová poradkyně se specializací na výživu dětí. V oblasti výživy vás provedu od těhotenství přes kojení, výživu kojenců a dětí až po úpravu hmotnosti a zdravou rodinnou stravu.
           </p>
           <p class="text-gray-700 leading-relaxed mb-4">
-            Propojuji klasický přístup ke stravě se zkušenostmi i netradičními výživovými metodami. Věřím, že správné stravování není o striktních dietách — je to o radosti z jídla a zdravých návycích od malička.
+            Své zkušenosti vám ráda předám při osobní konzultaci. Propojuji klasický přístup ke stravě se zkušenostmi i netradičními výživovými metodami.
           </p>
           <p class="text-gray-700 leading-relaxed mb-6">
-            Mé tábory a semináře jsou plné smíchu, vaření a nových chutí. Přijďte si to vyzkoušet!
+            Nevyhovuje vám klasická osobní konzultace? Mám pro vás nachystané i semináře a kurzy vaření. Mé největší téma je naučit vás jíst pestrou stravu.
           </p>
           <a href="/o-mne" class="btn-primary">Více o mně →</a>
         </div>
@@ -208,7 +208,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
         <span class="text-[#a8d5b5]"> pokud jste se dobře nenajedli."</span>
       </blockquote>
       <p class="text-green-200 text-lg leading-relaxed max-w-2xl mx-auto">
-        Ne, není to přehnané. Jíst nutričně nevhodné potraviny je podobné, jako do benzinového motoru tankovat naftu. Domluvme si schůzku — naučím vás, jak tělu dát vše, co potřebuje.
+        Ne, není to přehnané. Jíst nutričně nevhodné potraviny je podobné, jako do benzinového motoru tankovat naftu. Jenže jak zjistit, co „tankovat“ do vlastního těla? Nespoléhejte na metodu pokus/omyl a domluvme si schůzku. Naučím vás, jak tělu dát vše, co potřebuje k tomu, aby se správně vyvíjelo nebo přibíralo/ubíralo na hmotnosti.
       </p>
     </div>
   </section>
@@ -217,14 +217,14 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
   <section class="section">
     <div class="text-center mb-10">
       <h2 class="text-3xl font-black text-[#2c2c2c]">S čím vám pomohu?</h2>
-      <p class="text-gray-500 mt-2 max-w-xl mx-auto">Od těhotenství po školní věk — provázím vás celou cestou. Osobně v Písku i online.</p>
+      <p class="text-gray-500 mt-2 max-w-xl mx-auto">V oblasti výživy vás provedu od těhotenství přes kojení, zdravé přibírání či snižování váhy až po výživu v nemoci. Osobně v Písku i online.</p>
     </div>
     <div class="grid md:grid-cols-3 gap-6">
       {[
         {
           icon: '💬',
           title: 'Výživové poradenství',
-          desc: 'Individuální konzultace šité přesně na míru. Od těhotenství, kojení, příkrmů až po výživa školáků a úpravu hmotnosti.',
+          desc: 'Jednorázová, komplexní a motivační konzultace. Od těhotenství, kojení a příkrmů přes výživu dětí až po úpravu hmotnosti.',
           href: '/poradenstvi',
           label: 'Objednat se',
           color: 'bg-[#e8f5ec]',
@@ -232,7 +232,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
         {
           icon: '🏕️',
           title: 'Příměstské tábory',
-          desc: 'Týdenní kulinářské dobrodružství pro děti plné vaření, poznávání potravin a zdravého jídla. Každé léto v Písku.',
+          desc: 'Týdenní kulinářské dobrodružství pro děti plné vaření, poznávání potravin a zdravého jídla. V létě v Písku.',
           href: '/tabory',
           label: 'Tábory na léto',
           color: 'bg-[#fef3dc]',
@@ -312,7 +312,7 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
           <span class="inline-block bg-white/15 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-wider">Léto 2025</span>
           <h2 class="text-3xl font-black mb-3">Přihlaste děti<br/>na letní tábor! 🌞</h2>
           <p class="text-green-200 leading-relaxed mb-6">
-            Příměstské tábory plné vaření, poznávání potravin a zdravého jídla. Místa se plní rychle — pojistěte si místo pro vaše dítě ještě dnes.
+            Příměstské tábory plné vaření, poznávání potravin a zdravého jídla. Počet míst je omezený.
           </p>
           <a href="/tabory" class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] font-bold px-8 py-3 rounded-full hover:bg-gray-50 transition-colors shadow-lg">
             🏕️ Zobrazit tábory a přihlásit se
@@ -337,10 +337,10 @@ const upcoming = [...camps.map(c => ({...c, kind: 'camp' as const})), ...seminar
 
   <!-- ═══ KONTAKT ═══ -->
   <section class="section text-center">
-    <h2 class="text-3xl font-black text-[#2c2c2c] mb-3">Chcete si popovídat?</h2>
-    <p class="text-gray-500 mb-8 max-w-md mx-auto">Na první dotazy odpovídám ráda zdarma. Napište mi nebo zavolejte.</p>
+    <h2 class="text-3xl font-black text-[#2c2c2c] mb-3">Nevíte, jaká konzultace je pro vás nejvhodnější?</h2>
+    <p class="text-gray-500 mb-8 max-w-md mx-auto">Nebo máte jakoukoli jinou otázku k poradenství či seminářům? Dejte mi vědět, ozvu se vám.</p>
     <div class="flex flex-wrap gap-4 justify-center">
-      <a href="mailto:info@prozdravedeti.cz" class="btn-primary">✉️ info@prozdravedeti.cz</a>
+      <a href="/kontakt" class="btn-primary">✉️ Napsat zprávu</a>
       <a href="tel:+420725757041" class="btn-outline">📞 +420 725 757 041</a>
     </div>
     <p class="text-xs text-gray-400 mt-5">IČ: 88631681 · Na Pakšovce 2270, 397 01 Písek</p>

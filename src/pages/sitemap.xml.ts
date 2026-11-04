@@ -10,6 +10,11 @@ const STATIC_PAGES = [
   { url: '/o-mne', priority: '0.7', changefreq: 'monthly' },
   { url: '/poradenstvi', priority: '0.8', changefreq: 'monthly' },
   { url: '/skolni-jidelny', priority: '0.8', changefreq: 'monthly' },
+  { url: '/poukazky', priority: '0.7', changefreq: 'monthly' },
+  { url: '/reference', priority: '0.5', changefreq: 'monthly' },
+  { url: '/kontakt', priority: '0.6', changefreq: 'yearly' },
+  { url: '/obchodni-podminky', priority: '0.2', changefreq: 'yearly' },
+  { url: '/ochrana-osobnich-udaju', priority: '0.2', changefreq: 'yearly' },
 ];
 
 export const GET: APIRoute = () => {

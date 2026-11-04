@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+interface Props { title: string; description: string; updated: string }
+const { title, description, updated } = Astro.props;
+---
+
+<Layout title={`${title} – Pro zdravé děti`} description={description}>
+  <article class="max-w-3xl mx-auto px-4 py-14 legal">
+    <h1 class="text-3xl md:text-4xl font-black text-[#2c2c2c] mb-2">{title}</h1>
+    <p class="text-sm text-gray-400 mb-10">Platné od {updated}</p>
+    <slot />
+  </article>
+</Layout>
+
+<style>
+  .legal :global(h2) { font-size: 1.25rem; font-weight: 800; color: #2c2c2c; margin: 2rem 0 0.75rem; }
+  .legal :global(p), .legal :global(li) { color: #4b5563; line-height: 1.7; font-size: 0.95rem; }
+  .legal :global(ol), .legal :global(ul) { padding-left: 1.4rem; margin: 0.5rem 0; }
+  .legal :global(ol) { list-style: decimal; }
+  .legal :global(ul) { list-style: disc; }
+  .legal :global(li) { margin: 0.3rem 0; }
+  .legal :global(a) { color: #3d7a4a; text-decoration: underline; }
+</style>

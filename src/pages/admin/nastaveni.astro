@@ -18,6 +18,9 @@ if (Astro.request.method === 'POST') {
       db.prepare("INSERT OR REPLACE INTO settings (key,value) VALUES ('lenka_email',?)").run(email);
       saved = true;
     }
+  } else if (action === 'bank') {
+    db.prepare("INSERT OR REPLACE INTO settings (key,value) VALUES ('bank_account',?)").run(((form.get('bank_account') as string) || '').trim());
+    saved = true;
   } else if (action === 'password') {
     const pw = form.get('new_password') as string;
     const confirm = form.get('confirm_password') as string;
@@ -29,6 +32,8 @@ if (Astro.request.method === 'POST') {
 
 const db = getDb();
 const lenkaEmail = (db.prepare("SELECT value FROM settings WHERE key='lenka_email'").get() as any)?.value || '';
+const bankAccount = (db.prepare("SELECT value FROM settings WHERE key='bank_account'").get() as any)?.value || '';
+const newsletterCount = (db.prepare("SELECT COUNT(*) c FROM newsletter").get() as any).c as number;
 const photoUrls = Object.fromEntries(PHOTO_SLOTS.map(s => [s.key, getPhotoUrl(s.key)])) as Record<string, string>;
 ---
 
@@ -98,6 +103,25 @@ const photoUrls = Object.fromEntries(PHOTO_SLOTS.map(s => [s.key, getPhotoUrl(s.
         </div>
         <button type="submit" class="btn">Uložit email</button>
       </form>
+    </div>
+
+    <div class="card">
+      <h2>🏦 Číslo účtu pro platby</h2>
+      <p style="font-size:14px;color:#6b7280;margin:0 0 16px">Posílá se zákazníkům v potvrzení přihlášky na tábor, kurz a u poukazů (s variabilním symbolem = číslo objednávky). Když je prázdné, v e-mailu stojí „Platební údaje vám pošlu e-mailem“.</p>
+      <form method="POST">
+        <input type="hidden" name="action" value="bank" />
+        <div class="field">
+          <label>Číslo účtu</label>
+          <input type="text" name="bank_account" value={bankAccount} placeholder="123456789/0800" />
+        </div>
+        <button type="submit" class="btn">Uložit číslo účtu</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>✉️ Odběratelé novinek</h2>
+      <p style="font-size:14px;color:#6b7280;margin:0 0 16px">Přihlášených e-mailů: <strong>{newsletterCount}</strong></p>
+      <a href="/admin/newsletter.csv" class="btn" style="text-decoration:none">Stáhnout seznam (CSV)</a>
     </div>
 
     <div class="card">

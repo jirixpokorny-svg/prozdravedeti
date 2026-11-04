@@ -21,6 +21,7 @@ if (Astro.request.method === 'POST') {
   const description = form.get('description') as string;
   const active = form.get('active') === '1' ? 1 : 0;
   const sort_order = Number(form.get('sort_order')) || 0;
+  const price_options = ((form.get('price_options') as string) || '').trim() || null;
   const remove_poster = form.get('remove_poster') === '1';
 
   let poster_url = seminar.poster_url;
@@ -36,8 +37,8 @@ if (Astro.request.method === 'POST') {
     poster_url = await saveUpload(posterFile, 'seminar');
   }
 
-  db.prepare(`UPDATE seminars SET title=?,date_from=?,time_info=?,location=?,price=?,description=?,poster_url=?,active=?,sort_order=? WHERE id=?`)
-    .run(title, date_from, time_info, location, price, description, poster_url, active, sort_order, Number(id));
+  db.prepare(`UPDATE seminars SET title=?,date_from=?,time_info=?,location=?,price=?,price_options=?,description=?,poster_url=?,active=?,sort_order=? WHERE id=?`)
+    .run(title, date_from, time_info, location, price, price_options, description, poster_url, active, sort_order, Number(id));
 
   return Astro.redirect('/admin/seminare');
 }

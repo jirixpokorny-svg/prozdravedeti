@@ -1,0 +1,142 @@
+---
+// Společný formulář pro přihlášky, objednávky i dotazy → POST /api/order
+interface Choice { value: string; label: string }
+interface Props {
+  kind: 'camp' | 'seminar' | 'consultation' | 'voucher' | 'contact';
+  itemId?: string | number;
+  /** Výběr položky (např. typ konzultace, poukaz) – posílá se jako item_id */
+  items?: Choice[];
+  itemsLabel?: string;
+  selectedItem?: string;
+  /** Cenové varianty – posílá se jako variant */
+  options?: { label: string; price: number }[];
+  child?: boolean;
+  meeting?: boolean;
+  noteLabel?: string;
+  notePlaceholder?: string;
+  submitLabel?: string;
+  successText?: string;
+}
+
+const {
+  kind, itemId, items, itemsLabel = 'Vyberte', selectedItem, options, child = false, meeting = false,
+  noteLabel = 'Poznámka', notePlaceholder = '', submitLabel = 'Odeslat', successText = 'Děkuji! Potvrzení jsem poslala na váš e-mail a brzy se vám ozvu.',
+} = Astro.props;
+const isContact = kind === 'contact';
+const price = (n: number) => n.toLocaleString('cs-CZ') + ' Kč';
+---
+
+<div class="order-form-wrap">
+  <form class="order-form space-y-3" data-success={successText} novalidate>
+    <input type="hidden" name="type" value={kind} />
+    {itemId !== undefined && <input type="hidden" name="item_id" value={itemId} />}
+    <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+    {items && (
+      <div>
+        <label class="label">{itemsLabel} *</label>
+        <select name="item_id" required class="input">
+          {items.map(i => <option value={i.value} selected={i.value === selectedItem}>{i.label}</option>)}
+        </select>
+      </div>
+    )}
+
+    {options && options.length > 0 && (
+      <div>
+        <label class="label">Varianta *</label>
+        <select name="variant" required class="input">
+          {options.map(o => <option value={o.label}>{o.label} · {price(o.price)}</option>)}
+        </select>
+      </div>
+    )}
+
+    {child && (
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="label">Jméno dítěte *</label>
+          <input type="text" name="child_name" required class="input" placeholder="Honzík" />
+        </div>
+        <div>
+          <label class="label">Věk *</label>
+          <input type="text" name="child_age" required class="input" placeholder="8" />
+        </div>
+      </div>
+    )}
+
+    <div>
+      <label class="label">{child ? 'Jméno rodiče *' : 'Jméno a příjmení *'}</label>
+      <input type="text" name="parent_name" required class="input" placeholder="Jana Nováková" autocomplete="name" />
+    </div>
+    <div class="grid sm:grid-cols-2 gap-3">
+      <div>
+        <label class="label">E-mail *</label>
+        <input type="email" name="email" required class="input" placeholder="jana@email.cz" autocomplete="email" />
+      </div>
+      <div>
+        <label class="label">Telefon{isContact ? '' : ' *'}</label>
+        <input type="tel" name="phone" required={!isContact} class="input" placeholder="+420 …" autocomplete="tel" />
+      </div>
+    </div>
+
+    {meeting && (
+      <fieldset class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-700">
+        <label class="flex items-center gap-2"><input type="radio" name="meeting" value="osobně v Písku" checked /> Chci se potkat osobně v Písku</label>
+        <label class="flex items-center gap-2"><input type="radio" name="meeting" value="online" /> Chci se potkat online</label>
+      </fieldset>
+    )}
+
+    <div>
+      <label class="label">{noteLabel}{isContact ? ' *' : ''}</label>
+      <textarea name="note" rows={isContact ? 5 : 3} required={isContact} class="input resize-none" placeholder={notePlaceholder}></textarea>
+    </div>
+
+    <label class="flex items-start gap-2 text-xs text-gray-600">
+      <input type="checkbox" name="gdpr" value="1" required class="mt-0.5" />
+      <span>Souhlasím se <a href="/ochrana-osobnich-udaju" target="_blank" class="text-[#3d7a4a] underline">zpracováním osobních údajů</a>{!isContact && <> a s <a href="/obchodni-podminky" target="_blank" class="text-[#3d7a4a] underline">obchodními podmínkami</a></>}. *</span>
+    </label>
+    <label class="flex items-start gap-2 text-xs text-gray-600">
+      <input type="checkbox" name="newsletter" value="1" class="mt-0.5" />
+      <span>Chci čas od času dostávat tipy na zdravé stravování a info o nových kurzech.</span>
+    </label>
+
+    <div class="form-error hidden bg-red-50 text-red-700 rounded-xl p-3 text-sm"></div>
+    <button type="submit" class="btn-warm w-full justify-center text-base">{submitLabel}</button>
+  </form>
+  <div class="form-success hidden bg-[#e8f5ec] text-[#2d5c38] rounded-xl p-5 text-sm font-semibold"></div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLFormElement>('.order-form').forEach(form => {
+    const wrap = form.closest('.order-form-wrap')!;
+    const errBox = form.querySelector<HTMLElement>('.form-error')!;
+    const okBox = wrap.querySelector<HTMLElement>('.form-success')!;
+    const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
+    const label = btn.textContent;
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      errBox.classList.add('hidden');
+      if (!form.reportValidity()) return;
+      btn.disabled = true;
+      btn.textContent = 'Odesílám…';
+      try {
+        const res = await fetch('/api/order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(Object.fromEntries(new FormData(form))),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || 'Chyba při odesílání');
+        form.classList.add('hidden');
+        okBox.textContent = '🎉 ' + form.dataset.success;
+        okBox.classList.remove('hidden');
+        okBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (err: any) {
+        errBox.textContent = err.message;
+        errBox.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = label;
+      }
+    });
+  });
+</script>

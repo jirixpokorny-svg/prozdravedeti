@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import FlyerZoom from '../../components/FlyerZoom.astro';
+import OrderForm from '../../components/OrderForm.astro';
 import { getDb } from '../../lib/db';
 import { formatDate, formatPrice } from '../../lib/slugify';
 import type { Camp } from '../../lib/db';
@@ -89,48 +90,7 @@ const fewSpots = camp.spots_left > 0 && camp.spots_left <= 3;
         ) : (
           <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
             <h2 class="text-lg font-bold text-[#2c2c2c] mb-4">📋 Přihláška</h2>
-            <form id="order-form" class="space-y-3">
-              <input type="hidden" name="item_id" value={camp.id} />
-              <input type="hidden" name="item_title" value={camp.title} />
-              <input type="hidden" name="type" value="camp" />
-
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="label">Jméno dítěte *</label>
-                  <input type="text" name="child_name" required class="input" placeholder="Honzík" />
-                </div>
-                <div>
-                  <label class="label">Věk *</label>
-                  <input type="text" name="child_age" required class="input" placeholder="8" />
-                </div>
-              </div>
-              <div>
-                <label class="label">Jméno rodiče *</label>
-                <input type="text" name="parent_name" required class="input" placeholder="Jana Nováková" />
-              </div>
-              <div class="grid grid-cols-2 gap-3">
-                <div>
-                  <label class="label">Email *</label>
-                  <input type="email" name="email" required class="input" placeholder="jana@email.cz" />
-                </div>
-                <div>
-                  <label class="label">Telefon *</label>
-                  <input type="tel" name="phone" required class="input" placeholder="+420 …" />
-                </div>
-              </div>
-              <div>
-                <label class="label">Poznámka (alergie, dotazy…)</label>
-                <textarea name="note" rows="2" class="input resize-none" placeholder="Sem napište vše důležité…"></textarea>
-              </div>
-
-              <div id="form-error" class="hidden bg-red-50 text-red-700 rounded-xl p-3 text-sm"></div>
-              <div id="form-success" class="hidden bg-[#e8f5ec] text-[#2d5c38] rounded-xl p-4 text-sm font-semibold"></div>
-
-              <button type="submit" id="submit-btn" class="btn-warm w-full justify-center text-base mt-1">
-                Odeslat přihlášku
-              </button>
-              <p class="text-xs text-gray-400 text-center">Po odeslání vás budeme kontaktovat s dalšími kroky.</p>
-            </form>
+            <OrderForm kind="camp" itemId={camp.id} child noteLabel="Poznámka (alergie, dotazy…)" notePlaceholder="Sem napište vše důležité…" submitLabel="Odeslat přihlášku" successText="Přihláška odeslána! Potvrzení s platebními údaji jsem poslala na váš e-mail." />
           </div>
         )}
       </div>
@@ -146,40 +106,3 @@ const fewSpots = camp.spots_left > 0 && camp.spots_left <= 3;
   </div>
 </Layout>
 
-<script>
-  const form = document.getElementById('order-form') as HTMLFormElement | null;
-  const errBox = document.getElementById('form-error');
-  const successBox = document.getElementById('form-success');
-  const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement | null;
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!submitBtn) return;
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Odesílám…';
-    errBox?.classList.add('hidden');
-    successBox?.classList.add('hidden');
-
-    try {
-      const res = await fetch('/api/order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(Object.fromEntries(new FormData(form))),
-      });
-      const json = await res.json();
-      if (res.ok) {
-        form.classList.add('hidden');
-        if (successBox) {
-          successBox.textContent = '🎉 Přihláška odeslána! Potvrzení jsme poslali na váš email. Brzy se vám ozveme.';
-          successBox.classList.remove('hidden');
-        }
-      } else {
-        throw new Error(json.error || 'Chyba při odesílání');
-      }
-    } catch (err: any) {
-      if (errBox) { errBox.textContent = err.message; errBox.classList.remove('hidden'); }
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Odeslat přihlášku';
-    }
-  });
-</script>

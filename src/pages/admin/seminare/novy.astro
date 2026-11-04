@@ -16,6 +16,7 @@ if (Astro.request.method === 'POST') {
   const description = form.get('description') as string;
   const active = form.get('active') === '1' ? 1 : 0;
   const sort_order = Number(form.get('sort_order')) || 0;
+  const price_options = ((form.get('price_options') as string) || '').trim() || null;
 
   let poster_url: string | null = null;
   const posterFile = form.get('poster') as File | null;
@@ -27,8 +28,8 @@ if (Astro.request.method === 'POST') {
   const base = slugify(title) + '-' + date_from.slice(0, 7);
   let slug = base;
   for (let n = 2; db.prepare("SELECT 1 FROM seminars WHERE slug = ?").get(slug); n++) slug = `${base}-${n}`;
-  db.prepare(`INSERT INTO seminars (slug,title,date_from,time_info,location,price,description,poster_url,active,sort_order)
-    VALUES (?,?,?,?,?,?,?,?,?,?)`).run(slug, title, date_from, time_info, location, price, description, poster_url, active, sort_order);
+  db.prepare(`INSERT INTO seminars (slug,title,date_from,time_info,location,price,price_options,description,poster_url,active,sort_order)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?)`).run(slug, title, date_from, time_info, location, price, price_options, description, poster_url, active, sort_order);
 
   return Astro.redirect('/admin/seminare');
 }

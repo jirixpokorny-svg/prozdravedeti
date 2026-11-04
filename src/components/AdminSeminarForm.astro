@@ -82,6 +82,15 @@ const { seminar, action, backUrl } = Astro.props;
   </div>
 
   <div class="card">
+    <h2>Cenové varianty (nepovinné)</h2>
+    <div class="field">
+      <label>Jedna varianta na řádek ve tvaru „Název | cena“</label>
+      <textarea name="price_options" style="min-height:90px;font-family:monospace" placeholder="Dospělý | 890">{seminar?.price_options || ''}</textarea>
+      <p class="hint">Když varianty vyplníte, zákazník si v přihlášce jednu vybere a cena se vezme odsud. Jinak platí cena výše.</p>
+    </div>
+  </div>
+
+  <div class="card">
     <h2>Popis</h2>
     <div class="field">
       <label>Popis *</label>

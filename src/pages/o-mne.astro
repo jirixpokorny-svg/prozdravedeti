@@ -20,10 +20,10 @@ const photoSpoluprace = getPhotoUrl('spoluprace');
             Jmenuji se<br /><span class="text-[#3d7a4a]">Lenka Pokorná</span>
           </h1>
           <p class="text-lg text-gray-600 leading-relaxed mb-6">
-            Certifikovaná výživová poradkyně se specializací na výživu kojenců a dětí. Pomáhám maminkám i celým rodinám najít cestu k jídlu, které děti milují a které jim dělá dobře.
+            Jsem certifikovaná výživová poradkyně se specializací na dětskou výživu. Na cestu změny stravování mě přivedlo moje první miminko a návrat k sobě a svým snům. Nyní jsou mými učiteli právě moje děti, které vždy dávají jasně čitelnou zpětnou vazbu.
           </p>
           <div class="flex flex-wrap gap-3">
-            <a href="mailto:info@prozdravedeti.cz" class="btn-primary">Napsat mi</a>
+            <a href="/kontakt" class="btn-primary">Napsat mi</a>
             <a href="/poradenstvi" class="btn-outline">Co nabízím</a>
           </div>
         </div>
@@ -45,13 +45,13 @@ const photoSpoluprace = getPhotoUrl('spoluprace');
         <h2 class="text-3xl font-black text-[#2c2c2c] mb-6">Můj příběh</h2>
         <div class="space-y-4 text-gray-600 leading-relaxed">
           <p>
-            Celý život jsem věděla, že chci pracovat s lidmi a pomáhat jim. Vystudovala jsem farmaceutického laboranta a pak jsem prošla různými manažerskými pozicemi — ale stále mi něco chybělo.
+            Už když jsem byla malá, přála jsem si pomáhat lidem k jejich lepšímu zdraví. Moje teta byla zdravotní sestra a velmi často nám dětem vyprávěla příběhy z nemocnice. Nejdříve jsem chtěla být zdravotní sestra, ale poté jsem přišla na to, že chci lidem pomáhat ještě dříve, než se do nemocnice dostanou.
           </p>
           <p>
-            Zlom přišel, když se nám narodilo miminko. Najednou jsem se ocitla tváří v tvář otázkám, na které jsem neměla odpovědi: <em class="text-[#2c2c2c]">Co skutečně potřebuje malé dítě? Jak ho od začátku naučit zdravě jíst?</em>
+            Ale jak to tak bývá, osud zamíchal karty trochu jinak a já jsem se po studiu farmaceutického laboranta vrhla na dráhu rostlinnou a věnovala se studiu rostlinolékařství, ekologii a ekozemědělství. Pak nástup do práce, nové nabídky, příležitosti, otočení se o 180° od svých snů, vysoké manažerské pozice ve velkých firmách… a můj sen se postupně rozplýval.
           </p>
           <p>
-            Vrátila jsem se ke svým snům a začala studovat výživu. A to, co jsem původně dělala ze zvědavosti, se stalo mým posláním.
+            Ještě že mě potkalo mateřství a můj sen se mi začal postupně naplňovat.
           </p>
         </div>
       </div>
@@ -72,35 +72,18 @@ const photoSpoluprace = getPhotoUrl('spoluprace');
   <!-- Cesta výživovou poradkyní – timeline -->
   <section class="bg-[#faf8f3] py-14">
     <div class="max-w-3xl mx-auto px-4">
-      <h2 class="text-3xl font-black text-[#2c2c2c] mb-10 text-center">Moje cesta</h2>
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-10 text-center">V číslech</h2>
       <div class="relative">
         <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-[#3d7a4a]/20"></div>
         <div class="space-y-8">
           {[
-            {
-              year: '2015',
-              icon: '🎓',
-              title: 'Výživová poradkyně',
-              text: 'Absolvovala jsem kurz výživového poradenství a stala se certifikovanou výživovou poradkyní.'
-            },
-            {
-              year: '2016–17',
-              icon: '📚',
-              title: 'Specializace a vzdělávání',
-              text: 'Další kurzy a specializace: výživa kojenců a batolat, výživa v těhotenství, laktační poradenství, základy příkrmů.'
-            },
-            {
-              year: '2018',
-              icon: '🤝',
-              title: 'Spolupráce s RC Fazolka',
-              text: 'Začala jsem přednášet pro Rodinné centrum Fazolka v Písku — workshopy o výživě pro maminky s miminky a malými dětmi.'
-            },
-            {
-              year: 'dnes',
-              icon: '🌿',
-              title: 'Vlastní praxe & tábory',
-              text: 'Individuální poradenství, skupinové workshopy a příměstské tábory pro děti zaměřené na zdravé vaření a vztah k jídlu.'
-            },
+            { year: '2015', icon: '🎓', title: 'Rekvalifikace: Poradce pro výživu', text: 'Společnost Ekolandia o.p.s.' },
+            { year: '2015', icon: '📚', title: 'Kurzy výživy dětí', text: 'Absolventka kurzu Výživa dětí (Martin Jelínek) a kurzu Radost ze zdravých dětí (Jan Zerzán a Vladimíra Strnadelová).' },
+            { year: 'od 2015', icon: '💬', title: 'Poradenství a lektorování', text: 'Individuální výživové poradenství a lektorování kurzů vaření a seminářů pro veřejnost, např. Pestrá strava, Začínáme s příkrmy miminka, Výživa dětí, Výživa těhotných a kojících maminek.' },
+            { year: '2016 – 2021', icon: '🥪', title: 'Zdravé svačiny v RC Fazolka', text: 'Příprava zdravých svačin pro děti 2–6 let.' },
+            { year: 'od 2016', icon: '🏫', title: 'Školní jídelny a školy', text: 'Lektorka tematických školení na míru pro školní jídelny, semináře pro rodiče a pedagogy, projektové dny ve školách a školkách.' },
+            { year: '2018', icon: '👩‍🍳', title: 'Stáž v restauraci ESKA', text: 'ESKA Praha Karlín pod vedením šéfkuchaře Martina Štangla.' },
+            { year: '2016 – 2025', icon: '🍲', title: 'Kurzy vaření', text: 'Kurz vaření „Zdraví a vitalita na talíři“ se spol. Country life s.r.o., dále s Michalem Křepelkou, Romanem Vaňkem, Romanem Paulusem, Pavlem Drdelem, Přemkem Forejtem a dalšími.' },
           ].map(item => (
             <div class="flex gap-6 items-start">
               <div class="relative z-10 w-12 h-12 bg-white rounded-2xl border-2 border-[#3d7a4a]/30 flex items-center justify-center text-xl flex-shrink-0 shadow-sm">{item.icon}</div>
@@ -133,21 +116,21 @@ const photoSpoluprace = getPhotoUrl('spoluprace');
       <div>
         <h2 class="text-3xl font-black text-[#2c2c2c] mb-4">Spolupráce</h2>
         <p class="text-gray-600 leading-relaxed mb-6">
-          Výživa dětí není jen o jídelníčku — je o prostředí a vztazích. Proto spolupracuji s organizacemi, které sdílejí stejné hodnoty.
+          Mé probíhající spolupráce:
         </p>
         <div class="space-y-3">
           {[
-            { name: 'RC Fazolka Písek', desc: 'Workshopy a přednášky pro maminky s malými dětmi' },
-            { name: 'Hernajs', desc: 'Tematické akce zaměřené na zdravý životní styl dětí' },
-            { name: 'Skutečně zdravá škola', desc: 'Program podpory zdravého stravování na školách' },
-            { name: 'Zdravě a hravě', desc: 'Projekty propojující hru a zdravou výživu pro nejmenší' },
-            { name: 'Bezoví', desc: 'Spolupráce na komunitních akcích a vzdělávání' },
+            { name: 'Hernajs', desc: 'Dílna i herna, krásný prostor pro společný čas dětí i rodičů. Pořádám zde semináře pro rodiče na téma 1. příkrmy, výživa dětí od 1 roku do 6 let, zdravé svačinky na cestu a další. Také zde tvořím drobné svačinky pro nejmenší i větší pro rodiče.' },
+            { name: 'Skutečně zdravá škola', desc: 'Mezinárodně oceňovaný program, který škole zajistí kvalitní stravování a vzdělávání o jídle. Jsem zde lektorkou kurzů vaření pro kuchaře a kuchařky školních jídelen, analytikem skladových zásob školních zařízení, lektorkou projektových dnů a seminářů pro rodiče i širokou veřejnost.' },
+            { name: 'Semináře', desc: 'Pro místní akční skupiny, spolky, komunity a rodinná centra organizuji a lektoruji semináře o zdravém stravování pro pedagogy ZŠ, rodiče i kuchaře a kuchařky školních jídelen. Například týdenní vaření s kuchařkami školních jídelen ve Vodňanech ve spolupráci s MAS Vodňanská ryba a SOUs Vodňany.' },
+            { name: 'Zdravě a hravě', desc: 'Spolupracuji se školami v rámci projektových dnů, kde vzdělávám děti na téma „Zdravě a hravě“. Propojuji komunitu školy či školky a rodičů při tematických seminářích, setkáních s dodavateli a farmáři, při jarmarcích a dalších akcích.' },
+            { name: 'Bezoví', desc: 'Nezisková organizace zaměřující se na rozvoj sociálně environmentální ekonomiky, provozuje v Písku prodejnu BEZ. spolkový obchod váženým zbožím. Mám na starost šíři a kvalitu sortimentu a spolupráci s farmáři a dodavateli a organizuji osvětové a vzdělávací akce či jarmarky.' },
           ].map(partner => (
             <div class="flex items-start gap-3 bg-[#e8f5ec] rounded-xl px-4 py-3">
               <span class="w-2 h-2 bg-[#3d7a4a] rounded-full flex-shrink-0 mt-2"></span>
               <div>
                 <span class="font-bold text-[#2c2c2c] text-sm">{partner.name}</span>
-                <span class="text-gray-500 text-sm"> — {partner.desc}</span>
+                <span class="text-gray-500 text-sm">: {partner.desc}</span>
               </div>
             </div>
           ))}
@@ -161,11 +144,11 @@ const photoSpoluprace = getPhotoUrl('spoluprace');
     <div class="max-w-3xl mx-auto px-4 text-center">
       <div class="text-5xl mb-6">💚</div>
       <p class="text-lg leading-relaxed text-green-100 mb-8 italic max-w-xl mx-auto">
-        "Děkuji svému manželi Jiřímu za podporu, která mi umožnila jít za svým snem a dělat práci, která mě naplňuje."
+        „Chtěla bych poděkovat svému muži Jiřímu za podporu, že mi pomohl změnu nejen uchopit, ale následně i zrealizovat. Velké poděkování patří i mým rodičům, bez kterých by nebylo nic.“
       </p>
       <div class="border-t border-white/20 pt-8">
-        <h2 class="text-2xl font-bold mb-2">Chcete si popovídat?</h2>
-        <p class="text-green-200 mb-6">Na první dotazy odpovídám ráda zdarma — napište mi nebo zavolejte.</p>
+        <h2 class="text-2xl font-bold mb-2">Objednejte se na konzultaci</h2>
+        <p class="text-green-200 mb-6">Komplexní, jednorázová i motivační konzultace, osobně v Písku nebo online. <a href="/poradenstvi#konzultace" class="underline text-white">Podrobnosti a objednávka</a></p>
         <div class="flex flex-wrap gap-3 justify-center">
           <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] font-bold px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">✉️ info@prozdravedeti.cz</a>
           <a href="tel:+420725757041" class="inline-flex items-center gap-2 bg-[#ffffff20] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#ffffff30] transition-colors border border-white/30">📞 +420 725 757 041</a>

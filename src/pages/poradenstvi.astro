@@ -1,8 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import OrderForm from '../components/OrderForm.astro';
 import { getPhotoUrl } from '../lib/photos';
 import type { PhotoSlotKey } from '../lib/photos';
+import { CONSULTATIONS } from '../lib/catalog';
 
+// Texty převzaty z původního webu (S čím vám pomohu / Jak probíhá mé poradenství)
 const services = [
   {
     icon: '🤰',
@@ -10,14 +13,7 @@ const services = [
     slug: 'tehotenstvi',
     color: 'from-[#fef3dc] to-[#fef9ef]',
     accent: '#c07818',
-    summary: 'Co a kolik jíst v těhotenství, jak pokrýt zvýšené nároky na živiny, jak zvládnout nechutenství a ranní nevolnosti.',
-    points: [
-      'Vyvážený jídelníček pro těhotnou',
-      'Klíčové vitaminy a minerály (folát, železo, jód, DHA…)',
-      'Jak zvládat nevolnosti a chutě',
-      'Čemu se raději vyhnout',
-      'Přibírání na váze v těhotenství',
-    ],
+    text: 'Čekáte miminko? Gratuluji! Pokud jste nezměnila stravovací návyky před početím, je dobré si je nastavit nyní. Jaké potraviny zařadit ve větší míře a které naopak vynechat? O kolik navýšit denní porce potravin? Jak vyřešit problémy s otoky končetin či těhotenskou cukrovkou?',
   },
   {
     icon: '🍼',
@@ -25,14 +21,7 @@ const services = [
     slug: 'kojeni',
     color: 'from-[#e8f5ec] to-[#f0faf4]',
     accent: '#3d7a4a',
-    summary: 'Jak jíst při kojení, aby mělo miminko vše potřebné, a jak udržet energii pro sebe — bez diet a bez strádání.',
-    points: [
-      'Co jíst a čemu se vyhnout při kojení',
-      'Dostatečný přísun energie a živin',
-      'Potraviny podporující tvorbu mléka',
-      'Alergie a kojení',
-      'Hubnutí po porodu zdravě a bezpečně',
-    ],
+    text: 'Miminko je už na světě, ale bříško je stále velké? Máte neustále hlad, ale ještě jste neshodila přebytečná kila po porodu, takže jíte málo? Tvoří se vám málo mléka? Nebojte se, pomohu vám to vyřešit.',
   },
   {
     icon: '🥣',
@@ -40,14 +29,7 @@ const services = [
     slug: 'prikrmy',
     color: 'from-[#fce8e8] to-[#fff4f4]',
     accent: '#c04040',
-    summary: 'Kdy a jak začít, co zavádět jako první, jak naučit miminko jíst ze lžičky i samo — krok za krokem.',
-    points: [
-      'Kdy je miminko připraveno na příkrmy',
-      'První potraviny — co a v jakém pořadí',
-      'BLW vs. tradiční příkrmy (nebo kombinace)',
-      'Jak předcházet odmítání jídla',
-      'Alergenní potraviny a jak je zavádět',
-    ],
+    text: 'Přemýšlíte, kdy s nimi začít? Co a jak vařit? Jak na dítě, které příkrmy odmítá nebo naopak neví, kdy přestat? Trápí vás neprospívání dítěte? Pomohu vám s výživou již od první lžičky.',
   },
   {
     icon: '🧒',
@@ -55,14 +37,7 @@ const services = [
     slug: 'deti',
     color: 'from-[#e8f0fb] to-[#f4f7fe]',
     accent: '#3a5fa0',
-    summary: 'Zdravé jídlo pro batolata a školáky: jak sestavit jídelníček, zvládnout výběrovost a naučit děti radosti z dobrého jídla.',
-    points: [
-      'Vyvážený jídelníček pro batole a školáka',
-      'Jak zvládat výběrové jedlíky',
-      'Zdravé svačiny do školky a školy',
-      'Sladkosti a junk food — jak na ně',
-      'Rodinný stůl jako základ dobrých návyků',
-    ],
+    text: 'První příkrmy jsou již zdárně za vámi, ale jak dál? Máte jasno v tom, jak by měla strava vašeho dítěte vypadat, ale narážíte na jiné postoje vašeho okolí? Pojďte si popovídat o tom, jak nerozhádat rodinu kvůli barevným bonbonům a bílým rohlíkům. Zdravá strava chce hlavně klid na duši a jasno v mysli.',
   },
   {
     icon: '⚖️',
@@ -70,23 +45,29 @@ const services = [
     slug: 'hmotnost',
     color: 'from-[#f0e8fb] to-[#f8f4fe]',
     accent: '#7a3d9a',
-    summary: 'Zdravé a trvalé změny hmotnosti pro rodiče i děti — bez drastických diet, s respektem k tělu a bez zbytečných zákazů.',
-    points: [
-      'Realistické cíle a udržitelný přístup',
-      'Jídelníček bez drastického omezování',
-      'Pohybová aktivita jako součást životního stylu',
-      'Psychologie jídla a emoční jedení',
-      'Podpora celé rodiny v procesu změny',
-    ],
+    text: 'Zdravé přibírání a redukce hmotnosti mají překvapivě mnoho společného. Chcete-li výživu nastavit zdravě, nepřibírat jen na rohlících a sladkostech, nebo naopak nesnažit se zhubnout nesmyslnými dietami s jojo efektem, ozvěte se mi, dáme tomu spolu smysl.',
   },
+];
+
+const steps = [
+  { title: 'První krok', text: 'Už tím, že se mi ozvete, uděláte obrovský kus práce. Z vaší strany je potřeba jen rozhodnutí chtít změnu, vším ostatním vás provedu.' },
+  { title: 'Vstupní dotazník', text: 'E-mailem vám pošlu vstupní dotazník. Je důležité, abyste nic nepřikrášlovali. V takovém případě nám bude trvat podstatně déle, než chyby objevíme.' },
+  { title: 'Zpracování dat', text: 'Zpracování vašeho vyplněného dotazníku mi zabere nějaký čas, proto mi ho pošlete zpátky nejpozději 3 dny před naší schůzkou.' },
+  { title: 'Setkání a zhodnocení', text: 'Cílem prvního setkání je upřesnění, jakým směrem se máte vydat a co je třeba začít měnit. Pěkně krok za krokem. Konzultace trvá přibližně 2 hodiny.' },
+  { title: 'Změření', text: 'Zvážím a změřím vás, abychom měli vstupní hodnotu a abyste sama viděla, jak se nám na cestě daří. Chcete jen oživit a zpestřit stravu? Vážit a měřit se vůbec nemusíte :)' },
+  { title: 'Změna', text: 'Po konzultaci obdržíte nejpozději do 3 dnů vše sepsané včetně doporučení, jak začít se změnami tak, aby byly pro vás jednoduché a dobře uchopitelné.' },
 ];
 
 const servicePhotos = Object.fromEntries(
   services.map(s => [s.slug, getPhotoUrl(`sluzba-${s.slug}` as PhotoSlotKey)])
 );
+const selected = CONSULTATIONS.some(c => c.id === Astro.url.searchParams.get('konzultace'))
+  ? Astro.url.searchParams.get('konzultace')!
+  : 'komplexni';
+const price = (n: number) => n.toLocaleString('cs-CZ') + ' Kč';
 ---
 
-<Layout title="S čím vám pomůžu – Pro zdravé děti" description="Výživové poradenství pro těhotné, kojící maminky, příkrmy, výživa dětí od 1 roku, úprava hmotnosti. Lenka Pokorná, Písek.">
+<Layout title="S čím vám pomůžu – Pro zdravé děti" description="Výživové poradenství pro těhotné, kojící maminky, příkrmy, výživa dětí od 1 roku, úprava hmotnosti. Jednorázová, komplexní a motivační konzultace. Lenka Pokorná, Písek.">
 
   <!-- Hero -->
   <section class="bg-gradient-to-br from-[#e8f5ec] via-[#faf8f3] to-[#fef3dc] py-16">
@@ -94,39 +75,28 @@ const servicePhotos = Object.fromEntries(
       <span class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm border border-[#3d7a4a]/10">💬 Osobní i online konzultace</span>
       <h1 class="text-4xl md:text-5xl font-black text-[#2c2c2c] mb-4 leading-tight">S čím vám pomůžu</h1>
       <p class="text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
-        Každá rodina je jiná. Konzultace navrhuji přesně na míru — ať jste teprve těhotná, kojíte, nebo řešíte, proč vaše dítě nejí zeleninu.
+        V oblasti výživy vás provedu od těhotenství přes kojení, zdravé přibírání či snižování váhy až po výživu v nemoci.
       </p>
+      <a href="#konzultace" class="btn-primary mt-8">Objednat konzultaci</a>
     </div>
   </section>
 
-  <!-- Služby -->
+  <!-- Oblasti -->
   <section class="max-w-5xl mx-auto px-4 py-14 space-y-16">
     {services.map((s, i) => (
       <div class={`grid md:grid-cols-2 gap-10 items-center ${i % 2 === 1 ? 'md:[&>*:first-child]:order-2' : ''}`}>
-        <!-- Text -->
         <div>
           <div class="flex items-center gap-3 mb-4">
             <span class="text-4xl">{s.icon}</span>
             <h2 class="text-2xl font-black text-[#2c2c2c]">{s.title}</h2>
           </div>
-          <p class="text-gray-600 leading-relaxed mb-5">{s.summary}</p>
-          <ul class="space-y-2">
-            {s.points.map(point => (
-              <li class="flex items-start gap-2.5 text-sm text-gray-700">
-                <span class="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={`background:${s.accent}20`}>
-                  <span class="w-2 h-2 rounded-full" style={`background:${s.accent}`}></span>
-                </span>
-                {point}
-              </li>
-            ))}
-          </ul>
+          <p class="text-gray-600 leading-relaxed">{s.text}</p>
           <div class="mt-6">
-            <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 text-sm font-bold hover:underline" style={`color:${s.accent}`}>
+            <a href="#konzultace" class="inline-flex items-center gap-2 text-sm font-bold hover:underline" style={`color:${s.accent}`}>
               Chci konzultaci →
             </a>
           </div>
         </div>
-        <!-- Foto -->
         {servicePhotos[s.slug] ? (
           <div class="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg">
             <img src={servicePhotos[s.slug]!} alt={s.title} class="w-full h-full object-cover" />
@@ -134,44 +104,73 @@ const servicePhotos = Object.fromEntries(
         ) : (
           <div class={`aspect-[4/3] rounded-3xl bg-gradient-to-br ${s.color} border-2 border-dashed flex flex-col items-center justify-center text-center p-8`} style={`border-color:${s.accent}30`}>
             <div class="text-5xl mb-3">{s.icon}</div>
-            <p class="font-semibold text-sm" style={`color:${s.accent}`}>Fotografie — {s.title}</p>
+            <p class="font-semibold text-sm" style={`color:${s.accent}`}>Fotografie: {s.title}</p>
           </div>
         )}
       </div>
     ))}
   </section>
 
-  <!-- Jak konzultace probíhá -->
-  <section class="bg-[#faf8f3] py-14">
-    <div class="max-w-3xl mx-auto px-4">
-      <h2 class="text-3xl font-black text-[#2c2c2c] mb-2 text-center">Jak konzultace probíhá?</h2>
-      <p class="text-center text-gray-500 mb-10">Online nebo osobně v Písku — vy si vyberete.</p>
-      <div class="grid md:grid-cols-3 gap-6">
-        {[
-          { num: '1', icon: '💬', title: 'Úvodní konzultace', desc: 'Rozebereme vaši situaci, cíle a aktuální stravovací návyky. Trvá přibližně 60 minut.' },
-          { num: '2', icon: '📋', title: 'Individuální plán', desc: 'Dostanete konkrétní doporučení a jídelní plán šitý na míru vašemu dítěti a rodině.' },
-          { num: '3', icon: '🔄', title: 'Navazující konzultace', desc: 'Sledujeme pokrok, upravujeme plán a odpovídáme na otázky, které přijdou v průběhu.' },
-        ].map(step => (
-          <div class="bg-white rounded-2xl p-6 shadow-sm text-center">
-            <div class="w-10 h-10 bg-[#3d7a4a] text-white rounded-full flex items-center justify-center font-black text-lg mx-auto mb-4">{step.num}</div>
-            <div class="text-2xl mb-2">{step.icon}</div>
-            <h3 class="font-bold text-[#2c2c2c] mb-2">{step.title}</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">{step.desc}</p>
+  <!-- Jak probíhá poradenství -->
+  <section id="jak-probiha" class="bg-white py-14">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-3 text-center">Jak probíhá mé poradenství?</h2>
+      <p class="text-center text-gray-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+        Začínáme dřív, než se vidíme. Nabízím tři typy konzultací: jednorázovou (krátká, stručná, na konkrétní problém), komplexní (podrobná do historie vašich stravovacích návyků, aktivit a stylu života, předurčující další spolupráci) a na ni navazující motivační (ke zhodnocování vaší cesty k cíli a k motivaci pokračovat).
+      </p>
+      <h3 class="text-xl font-black text-[#2c2c2c] mb-6 text-center">Co vás čeká před komplexní konzultací a na ní?</h3>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {steps.map((st, i) => (
+          <div class="rounded-2xl bg-[#faf8f3] p-6">
+            <div class="w-10 h-10 bg-[#3d7a4a] text-white rounded-full flex items-center justify-center font-black text-lg mb-3">{i + 1}</div>
+            <h4 class="font-bold text-[#2c2c2c] mb-2">{st.title}</h4>
+            <p class="text-gray-600 text-sm leading-relaxed">{st.text}</p>
           </div>
         ))}
+      </div>
+      <div class="grid md:grid-cols-2 gap-6 mt-10">
+        <div class="rounded-2xl border-l-4 border-[#f5a623] bg-[#fef9ef] p-6">
+          <h3 class="font-black text-lg mb-2">Co očekávat nemůžete?</h3>
+          <p class="text-sm text-gray-700 leading-relaxed">Způsob mé práce je odlišný od víkendových výživových poradců a doporučení z časopisů. Především ode mě nechtějte jídelníčky na míru. Ty nenastavuji proto, že z mé zkušenosti nemají pro nikoho z dlouhodobého pohledu žádný efekt. Mnohem prospěšnější pro vás je naučit se, jak se jídelníček dělá. Díky tomu začnete svému tělu rozumět vy sami a jen tak je změna udržitelná.</p>
+        </div>
+        <div class="rounded-2xl border-l-4 border-[#3d7a4a] bg-[#f0faf4] p-6">
+          <h3 class="font-black text-lg mb-2">Potkáme se osobně, nebo virtuálně?</h3>
+          <p class="text-sm text-gray-700 leading-relaxed">Konzultace nemusíte absolvovat osobně, můžeme se potkat i online. Je jen na vás, jaké máte možnosti a jakou cestu si zvolíte.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="bg-gradient-to-br from-[#3d7a4a] to-[#2d5c38] py-14 text-white">
-    <div class="max-w-2xl mx-auto px-4 text-center">
-      <h2 class="text-3xl font-black mb-3">Objednejte se</h2>
-      <p class="text-green-200 mb-8 leading-relaxed">Napište mi nebo zavolejte — na první dotazy odpovídám ráda zdarma.</p>
-      <div class="flex flex-wrap gap-3 justify-center">
-        <a href="mailto:info@prozdravedeti.cz" class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] font-bold px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">✉️ info@prozdravedeti.cz</a>
-        <a href="tel:+420725757041" class="inline-flex items-center gap-2 bg-[#ffffff20] text-white font-semibold px-6 py-3 rounded-full hover:bg-[#ffffff30] transition-colors border border-white/30">📞 +420 725 757 041</a>
+  <!-- Konzultace + objednávka -->
+  <section id="konzultace" class="py-14">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-10 text-center">Objednejte se na konzultaci</h2>
+      <div class="grid md:grid-cols-3 gap-5 mb-12">
+        {CONSULTATIONS.map(c => (
+          <div class={`card p-6 flex flex-col ${c.id === 'komplexni' ? 'ring-2 ring-[#3d7a4a]' : ''}`}>
+            <h3 class="font-black text-xl text-[#2c2c2c] mb-1">{c.title}</h3>
+            <p class="text-2xl font-black text-[#3d7a4a] mb-1">{price(c.price)}</p>
+            <p class="text-xs text-gray-500 mb-4">{c.duration}</p>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4 flex-1">{c.summary}</p>
+            <p class="text-xs text-gray-700 bg-[#e8f5ec] rounded-xl p-3"><strong>Cena zahrnuje:</strong> {c.includes}</p>
+          </div>
+        ))}
       </div>
+      <div class="max-w-xl mx-auto bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
+        <h3 class="text-xl font-black mb-1">Objednávka konzultace</h3>
+        <p class="text-sm text-gray-500 mb-5">Vyplňte formulář a já se vám ozvu. Domluvíme se na termínu, platbě a u komplexní konzultace vám pošlu vstupní dotazník.</p>
+        <OrderForm
+          kind="consultation"
+          items={CONSULTATIONS.map(c => ({ value: c.id, label: `${c.title} (${price(c.price)})` }))}
+          itemsLabel="Typ konzultace"
+          selectedItem={selected}
+          meeting
+          noteLabel="S čím potřebujete poradit?"
+          submitLabel="Odeslat objednávku"
+          successText="Děkuji za vaši důvěru. Co nejdříve se vám ozvu."
+        />
+      </div>
+      <p class="text-center text-sm text-gray-500 mt-6">Psaní pro vás není? Zavolejte mi: <a href="tel:+420725757041" class="font-bold text-[#3d7a4a]">+420 725 757 041</a></p>
     </div>
   </section>
 

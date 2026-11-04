@@ -32,30 +32,33 @@ const {
       <a href="/" class="flex items-center gap-3 group">
         <img src="/images/logo.png" alt="Pro zdravé děti" class="h-10 w-auto mix-blend-multiply" />
       </a>
-      <div class="hidden md:flex items-center gap-1">
-        <a href="/tabory" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Tábory</a>
-        <a href="/seminare" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Semináře & kurzy</a>
-        <a href="/skolni-jidelny" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Školní jídelny</a>
-        <a href="/o-mne" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">O mně</a>
-        <a href="/poradenstvi" class="px-4 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poradenství</a>
-        <a href="/#kontakt" class="btn-primary ml-2 text-sm !py-2">Kontakt</a>
+      <div class="hidden lg:flex items-center gap-0.5">
+        <a href="/tabory" class="px-3 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Tábory</a>
+        <a href="/seminare" class="px-3 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Semináře & kurzy</a>
+        <a href="/skolni-jidelny" class="px-3 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Školní jídelny</a>
+        <a href="/poukazky" class="px-3 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poukázky</a>
+        <a href="/o-mne" class="px-3 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">O mně</a>
+        <a href="/poradenstvi" class="px-3 py-2 rounded-full text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poradenství</a>
+        <a href="/kontakt" class="btn-primary ml-2 text-sm !py-2">Kontakt</a>
       </div>
       <!-- Mobile menu button -->
-      <button id="menu-btn" class="md:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Menu">
+      <button id="menu-btn" class="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors" aria-label="Menu">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
     </nav>
     <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-gray-100 bg-white px-4 pb-4">
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-gray-100 bg-white px-4 pb-4">
       <div class="flex flex-col gap-1 pt-3">
         <a href="/tabory" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Tábory</a>
         <a href="/seminare" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Semináře & kurzy</a>
         <a href="/skolni-jidelny" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Školní jídelny</a>
+        <a href="/poukazky" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poukázky</a>
+        <a href="/reference" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Reference</a>
         <a href="/o-mne" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">O mně</a>
         <a href="/poradenstvi" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-[#e8f5ec] hover:text-[#3d7a4a] transition-colors">Poradenství</a>
-        <a href="/#kontakt" class="btn-primary mt-1 text-sm justify-center">Kontakt</a>
+        <a href="/kontakt" class="btn-primary mt-1 text-sm justify-center">Kontakt</a>
       </div>
     </div>
   </header>
@@ -70,6 +73,13 @@ const {
       <div>
         <img src="/images/logo-vertical.png" alt="Pro zdravé děti" class="h-16 w-auto brightness-0 invert mb-4" />
         <p class="text-green-200 text-sm leading-relaxed">Certifikovaná výživová poradkyně se specializací na výživu dětí.</p>
+        <p class="text-white font-bold text-sm mt-6 mb-2">Chcete čas od času tipy na zdravé stravování a info o nových kurzech?</p>
+        <form id="newsletter-form" class="flex gap-2">
+          <input type="email" name="email" required placeholder="váš e-mail" class="flex-1 min-w-0 rounded-full px-4 py-2 text-sm text-gray-800 bg-white outline-none" />
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+          <button class="rounded-full bg-[#f5a623] text-white font-bold text-sm px-4 py-2 hover:bg-[#e0951a]">Odebírat</button>
+        </form>
+        <p id="newsletter-msg" class="text-xs text-green-200 mt-2 hidden"></p>
       </div>
       <div>
         <h3 class="font-bold text-lg mb-3">Nabídka</h3>
@@ -78,7 +88,10 @@ const {
           <li><a href="/seminare" class="hover:text-white transition-colors">Semináře & kurzy</a></li>
           <li><a href="/poradenstvi" class="hover:text-white transition-colors">Výživové poradenství</a></li>
           <li><a href="/skolni-jidelny" class="hover:text-white transition-colors">Školní jídelny</a></li>
+          <li><a href="/poukazky" class="hover:text-white transition-colors">Dárkové poukázky</a></li>
           <li><a href="/o-mne" class="hover:text-white transition-colors">O mně</a></li>
+          <li><a href="/reference" class="hover:text-white transition-colors">Reference</a></li>
+          <li><a href="/kontakt" class="hover:text-white transition-colors">Kontakt</a></li>
         </ul>
       </div>
       <div id="kontakt">
@@ -99,8 +112,12 @@ const {
         </ul>
       </div>
     </div>
-    <div class="border-t border-green-700 py-4 text-center text-green-300 text-xs">
-      © {new Date().getFullYear()} Pro zdravé děti – Lenka Pokorná
+    <div class="border-t border-green-700 py-4 px-4 text-center text-green-300 text-xs flex flex-wrap gap-x-4 gap-y-2 justify-center">
+      <span>© {new Date().getFullYear()} Pro zdravé děti, Ing. Lenka Pokorná</span>
+      <a href="/obchodni-podminky" class="hover:text-white">Obchodní podmínky</a>
+      <a href="/ochrana-osobnich-udaju" class="hover:text-white">Ochrana osobních údajů</a>
+      <a href="https://www.instagram.com/prozdravedeti/" target="_blank" rel="noopener" class="hover:text-white">Instagram</a>
+      <a href="https://www.facebook.com/prozdravedeti.cz" target="_blank" rel="noopener" class="hover:text-white">Facebook</a>
     </div>
   </footer>
 
@@ -108,6 +125,19 @@ const {
     const btn = document.getElementById('menu-btn');
     const menu = document.getElementById('mobile-menu');
     btn?.addEventListener('click', () => menu?.classList.toggle('hidden'));
+
+    const nl = document.getElementById('newsletter-form') as HTMLFormElement | null;
+    const nlMsg = document.getElementById('newsletter-msg');
+    nl?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const res = await fetch('/api/newsletter', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(Object.fromEntries(new FormData(nl))) });
+      const json = await res.json().catch(() => ({}));
+      if (nlMsg) {
+        nlMsg.textContent = res.ok ? 'A je to! Čas od času se vám ozvu s čerstvou porcí novinek a tipů.' : (json.error || 'Něco se nepovedlo. Zkuste to ještě jednou :)');
+        nlMsg.classList.remove('hidden');
+      }
+      if (res.ok) nl.reset();
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+import OrderForm from '../components/OrderForm.astro';
+---
+
+<Layout title="Kontakt – Pro zdravé děti" description="Kontakt na výživovou poradkyni Lenku Pokornou, Písek. Telefon, e-mail a kontaktní formulář.">
+  <section class="bg-gradient-to-br from-[#e8f5ec] via-[#faf8f3] to-[#fef3dc] py-16">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-black text-[#2c2c2c] mb-4">Kontakt</h1>
+      <p class="text-lg text-gray-600 max-w-xl mx-auto">Nevíte, jaká konzultace je pro vás nejvhodnější? Nebo máte jakoukoli jinou otázku k poradenství či seminářům? Dejte mi vědět, ozvu se vám.</p>
+    </div>
+  </section>
+
+  <section class="max-w-5xl mx-auto px-4 py-14 grid md:grid-cols-5 gap-10">
+    <div class="md:col-span-2 space-y-6">
+      <div>
+        <h2 class="text-xl font-black mb-2">Psaní pro vás není? Zavolejte mi!</h2>
+        <a href="tel:+420725757041" class="text-2xl font-black text-[#3d7a4a]">+420 725 757 041</a>
+      </div>
+      <div class="text-gray-700 leading-relaxed">
+        <p class="font-bold">Ing. Lenka Pokorná</p>
+        <p>Pro zdravé děti</p>
+        <p>Sídlo: Na Pakšovce 2270, 397 01 Písek</p>
+        <p>IČ: 88631681</p>
+        <p class="mt-2"><a href="mailto:info@prozdravedeti.cz" class="text-[#3d7a4a] font-semibold">info@prozdravedeti.cz</a></p>
+      </div>
+      <div class="flex gap-3">
+        <a href="https://www.instagram.com/prozdravedeti/" target="_blank" rel="noopener" class="btn-outline !py-2 text-sm">Instagram</a>
+        <a href="https://www.facebook.com/prozdravedeti.cz" target="_blank" rel="noopener" class="btn-outline !py-2 text-sm">Facebook</a>
+      </div>
+      <p class="font-semibold text-[#3d7a4a]">Těším se na naši spolupráci,<br/>Lenka Pokorná</p>
+    </div>
+    <div class="md:col-span-3 bg-white rounded-3xl shadow-sm border border-gray-100 p-6 md:p-8">
+      <h2 class="text-xl font-black mb-5">Kontaktní formulář</h2>
+      <OrderForm kind="contact" noteLabel="Vaše zpráva" submitLabel="Odeslat zprávu" successText="Děkuji za vaši důvěru. Co nejdříve se vám ozvu." />
+    </div>
+  </section>
+</Layout>

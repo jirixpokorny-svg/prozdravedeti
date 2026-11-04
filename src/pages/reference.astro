@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Převzato z původního webu (stránka Reference)
+const refs = [
+  { event: 'Seminář Jarní očista', author: 'Jana a Tomáš Č.', text: 'Děkujeme za milé sobotní setkání. Některé „očistné praktiky :-)“ zmíněné na semináři jsem již v minulosti zkoušela a děkuji, žes mi sdělila jejich hlubší význam! Ty pro mě nové, vyzkouším. Všechny ochutnávky na semináři nám velmi chutnaly! Energie máš na rozdávání! Také je moc fajn, co děláš pro školy, moc bych si přála, aby byla také větší vůle ze strany škol. Díky za vše.' },
+  { event: 'Seminář Jarní očista', author: 'Tereza B.', text: 'Leni, mockrát díky za všechny info, které jsi poslala i předala na semináři. Jsem moc ráda, že jsem se rozhoupala a účastnila se. Informace byly zajímavé a mnohdy pro mě úplně nové. Vše, co jsme ochutnali, bylo vynikající! A ty jsi byla skvělá, profesionální vedení, je vidět, že jsi ve svém oboru profík, vše jsi vysvětlila opravdu do hloubky a líbí se mi tvé nadšení.' },
+  { event: 'Seminář Výživa dětí', author: 'Lenka B.', text: 'Parádní! Věř, že i nám bylo ctí Tě poznat, slyšet. Jen škoda, že jsem Tě neznala dříve, byla bych pak klidnější, že jídlem dětem „neubližuji či nezatěžuji jejich malé žaludky“. Některé věci mi zapadly do mozaiky až s Tebou. A díky za možnost ochutnání Tvého nadání. To byl takový bonus + vhodné rozptýlení mezi povídáním/posloucháním. Děkuji Ti!' },
+  { event: 'Seminář Výživa dětí', author: 'Lucie B.', text: 'Můj celkový dojem je velice nadšený :-) Seminář byl pro mě hodně inspirativní, zažila jsem si několik aha-momentů, kdy mi došly různé souvislosti. Skvělé byly praktické příklady z tvé domácnosti nebo praxe. Mluvila jsi výstižně a jasně, vnímala jsem přirozené, nenucené prostředí a čas utíkal rychlostí blesku! Ochutnávky byly perfektní a překvapivé svojí jednoduchostí. Jsem hrozně ráda, že jsem se na seminář šla, stálo to za to!' },
+  { event: 'Seminář Jarní očista', author: 'Daniela K.', text: 'Setkání s Tebou bylo velmi příjemné, jde z Tebe radostná energie a to je bezva. Díky za spoustu skvělých nápadů a informací a hlavně nakopnutí to dělat v praxi, to je pro mě to nejtěžší: jít a udělat změny, které mi prospívají, a jen o tom nepřemýšlet a nekecat. Další mou velkou výzvou je jemnost ve všem a hlavně sama k sobě a to jsem na Tvém semináři cítila. Ještě jednou děkuji.' },
+  { event: 'Seminář Výživa dětí', author: 'Tereza B.', text: 'Seminář byl skvěle vedený, jako vždy tvoje semináře. Moc Ti děkuji za nové informace, které se jen tak někde nedočteš. A taky se mi líbily ty super alternativní pohankové palačinky a vůbec všechny recepty. Jsi pro mě opravdu inspirací, děkuji :)' },
+  { event: 'Seminář Výživa dětí', author: 'Jana Ř.', text: 'Leni, seminář splnil má očekávání a v některých oblastech je i předčil. Jsem úplně plná dojmů a informací. Děkuji za inspiraci.' },
+  { event: 'Seminář Jarní očista', author: 'Markéta A.', text: 'Naprosto vyčerpávající, trefně podané informace, které mi zapadly do mých zkušeností či vědění o daném tématu. Ráda přijdu na další seminář. Děkuji moc!' },
+];
+---
+
+<Layout title="Reference – Pro zdravé děti" description="Co říkají účastníci seminářů a kurzů Lenky Pokorné.">
+  <section class="bg-gradient-to-br from-[#e8f5ec] via-[#faf8f3] to-[#fef3dc] py-16">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <h1 class="text-4xl md:text-5xl font-black text-[#2c2c2c] mb-4">Reference</h1>
+      <p class="text-lg text-gray-600">Přečtěte si některé z mých referencí.</p>
+    </div>
+  </section>
+  <section class="max-w-6xl mx-auto px-4 py-14">
+    <div class="columns-1 md:columns-2 lg:columns-3 gap-6 [&>*]:mb-6">
+      {refs.map(r => (
+        <figure class="break-inside-avoid bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+          <p class="text-xs font-bold text-[#c07818] uppercase tracking-wider mb-3">{r.event}</p>
+          <blockquote class="text-gray-700 text-sm leading-relaxed">„{r.text}“</blockquote>
+          <figcaption class="mt-4 font-bold text-[#3d7a4a]">{r.author}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+</Layout>
