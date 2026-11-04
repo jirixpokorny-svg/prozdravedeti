@@ -45,8 +45,9 @@ const price = (n: number) => n.toLocaleString('cs-CZ') + ' Kč';
       <div>
         <label class="label">Varianta *</label>
         <select name="variant" required class="input">
-          {options.map(o => <option value={o.label}>{o.label} · {price(o.price)}</option>)}
+          {options.map(o => <option value={o.label} data-price={o.price}>{o.label} · {price(o.price)}</option>)}
         </select>
+        <p class="variant-total text-sm text-gray-600 mt-2">Cena celkem: <strong class="text-lg text-[#c07818]">{price(options[0].price)}</strong></p>
       </div>
     )}
 
@@ -112,6 +113,14 @@ const price = (n: number) => n.toLocaleString('cs-CZ') + ' Kč';
     const okBox = wrap.querySelector<HTMLElement>('.form-success')!;
     const btn = form.querySelector<HTMLButtonElement>('button[type=submit]')!;
     const label = btn.textContent;
+
+    // Cena celkem podle zvolené varianty
+    const variant = form.querySelector<HTMLSelectElement>('select[name=variant]');
+    const total = form.querySelector<HTMLElement>('.variant-total strong');
+    variant?.addEventListener('change', () => {
+      const p = Number(variant.selectedOptions[0]?.dataset.price);
+      if (total && p) total.textContent = p.toLocaleString('cs-CZ') + ' Kč';
+    });
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
