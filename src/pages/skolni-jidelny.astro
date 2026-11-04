@@ -1,0 +1,260 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const courses = [
+  {
+    code: 'A',
+    icon: '🥪',
+    title: 'Svačinky',
+    duration: '2–4 hodiny',
+    text: 'Společně připravíme několik variant svačin vhodných pro děti a reálně využitelných v podmínkách školní jídelny. Témata: luštěninové a zeleninové pomazánky, pečivo, zelenina a ovoce, celozrnné suroviny, sezónní obměny a svačiny přijatelné i pro děti zvyklé na tradiční nabídku.',
+    benefit: 'Konkrétní recepty a postupy, které lze ihned zařadit do praxe. Společná příprava, ochutnávka a prostor pro řešení konkrétních problémů jídelny.',
+  },
+  {
+    code: 'B',
+    icon: '🍲',
+    title: 'Bezmasá hlavní jídla',
+    duration: '4 hodiny',
+    text: 'Jak připravit bezmasé jídlo tak, aby nebylo jen „náhradou masa“, ale plnohodnotným a chutným hlavním jídlem? Prakticky: luštěninová jídla, zeleninové a obilovinové pokrmy, kombinace luštěnin a obilovin, karbanátky, nákypy, omáčky a další pokrmy pro děti.',
+    benefit: 'Rozšíření repertoáru bezmasých jídel z běžně dostupných surovin, která lze připravovat ve větším množství.',
+  },
+  {
+    code: 'C',
+    icon: '🫘',
+    title: 'Luštěniny, které dětem chutnají',
+    duration: '4 hodiny',
+    text: 'Práce s různými druhy luštěnin v polévkách, pomazánkách, hlavních jídlech, zeleninových směsích, karbanátcích a nákypech. Součástí je i práce s různými způsoby úpravy.',
+    benefit: 'Více možností, jak přirozeně navyšovat zastoupení luštěnin bez toho, aby děti dostávaly stále stejné pokrmy.',
+  },
+  {
+    code: 'D',
+    icon: '🐟',
+    title: 'Ryby pro děti',
+    duration: '4 hodiny',
+    text: 'Výběr vhodných druhů ryb, různé způsoby tepelné úpravy, rybí karbanátky a nákypy, kombinace se zeleninou a obilovinami a dochucování s ohledem na děti.',
+    benefit: 'Nové receptury a technologické postupy pro rozšíření nabídky rybích pokrmů a zvýšení jejich přijatelnosti.',
+  },
+  {
+    code: 'E',
+    icon: '🥣',
+    title: 'Polévky jinak',
+    duration: '2–4 hodiny',
+    text: 'Luštěninové, zeleninové a obilovinové polévky, vhodné způsoby zahušťování, práce s chutí bez nadměrného množství soli a využití polévky jako přirozené součásti pestrého jídelníčku.',
+    benefit: 'Jednoduché postupy pro pestřejší polévky bez výrazného zvýšení náročnosti přípravy.',
+  },
+  {
+    code: 'F',
+    icon: '🥗',
+    title: 'Saláty, zelenina a přílohy',
+    duration: '2–4 hodiny',
+    text: 'Sezónní zelenina, jednoduché zálivky, teplé i studené přílohy, využití luštěnin a obilovin v salátech a práce se vzhledem, strukturou a servírováním.',
+    benefit: 'Konkrétní inspirace pro pestřejší nabídku zeleniny a příloh a tipy, jak zvýšit jejich přijatelnost u dětských strávníků.',
+  },
+];
+
+const prices = [
+  { name: 'Odborný seminář + ochutnávka', scope: '2 h', fee: '3 000 Kč', prep: '1 200 Kč', food: '800 Kč', travel: '500 Kč' },
+  { name: 'Praktický workshop', scope: '4 h', fee: '5 000 Kč', prep: '2 000 Kč', food: '1 200 Kč', travel: '500 Kč' },
+  { name: 'Intenzivní praktický workshop', scope: '2 a více h', fee: 'od 2 000 Kč', prep: '1 500 Kč', food: '0 Kč', travel: '500 Kč' },
+  { name: 'Celodenní workshop', scope: '8 h', fee: '10 000 Kč', prep: '4 000 Kč', food: '2 500 Kč', travel: '500 Kč' },
+];
+
+const gains = [
+  'kuchařky získají konkrétní recepty, technologické postupy a nové nápady pro každodenní provoz',
+  'možnost vše si prakticky vyzkoušet a řešit vlastní otázky',
+  'vedoucí jídelny získá podporu při změnách jídelníčku a práci s recepturami',
+  'ředitel a zřizovatel získají odborně vedenou podporu školní jídelny a konkrétní výstupy',
+  'možnost zapojit do změny také děti, rodiče a další zaměstnance školy',
+];
+
+const mailto = 'mailto:info@prozdravedeti.cz?subject=' + encodeURIComponent('Spolupráce se školní jídelnou');
+---
+
+<Layout title="Školní jídelny – Pro zdravé děti" description="Kurzy vaření, workshopy a revize receptur pro školní jídelny. Praktická příprava na nový spotřební koš. Ing. Lenka Pokorná, Písek.">
+
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-[#e8f5ec] via-[#faf8f3] to-[#fef3dc] py-16">
+    <div class="max-w-3xl mx-auto px-4 text-center">
+      <span class="inline-flex items-center gap-2 bg-white text-[#3d7a4a] text-sm font-semibold px-4 py-1.5 rounded-full mb-4 shadow-sm border border-[#3d7a4a]/10">🍽️ Nabídka pro školní jídelny</span>
+      <h1 class="text-4xl md:text-5xl font-black text-[#2c2c2c] mb-4 leading-tight">Praktická příprava na nový spotřební koš</h1>
+      <p class="text-lg text-gray-600 leading-relaxed max-w-xl mx-auto">
+        Pomohu školním jídelnám převést nové principy školního stravování do běžného provozu. Prakticky, srozumitelně a s ohledem na děti i možnosti konkrétní kuchyně.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3 justify-center">
+        <a href={mailto} class="btn-primary">Poptat spolupráci</a>
+        <a href="#nabidka" class="inline-flex items-center px-6 py-3 rounded-full font-bold text-[#3d7a4a] bg-white border border-[#3d7a4a]/20 hover:bg-[#e8f5ec] transition-colors">Prohlédnout nabídku</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pro koho -->
+  <section class="max-w-5xl mx-auto px-4 py-14 grid md:grid-cols-2 gap-10 items-start">
+    <div>
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-4">Pro koho je nabídka určena</h2>
+      <p class="text-gray-600 leading-relaxed">
+        Pro kuchařky a vedoucí školních jídelen, ředitele škol a zřizovatele. Nabídku lze připravit jako samostatný seminář, praktický workshop v kuchyni nebo komplexní podporu celé školní jídelny.
+      </p>
+    </div>
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
+      <h3 class="font-bold text-lg text-[#2c2c2c] mb-4">Jak kurz probíhá</h3>
+      <ol class="space-y-3">
+        {['Úvodní teoretický blok', 'Praktické vaření přímo ve vaší kuchyni', 'Společná degustace, diskuze a návrh dalších kroků'].map((step, i) => (
+          <li class="flex items-start gap-3 text-sm text-gray-700">
+            <span class="w-7 h-7 rounded-full bg-[#e8f5ec] text-[#3d7a4a] font-black flex items-center justify-center flex-shrink-0">{i + 1}</span>
+            <span class="pt-1">{step}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- Kurzy -->
+  <section id="nabidka" class="bg-white py-14">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="text-sm font-bold text-[#c07818] uppercase tracking-wider text-center mb-2">1. Praktické kurzy vaření</p>
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-10 text-center">Co mohu vaší školní jídelně nabídnout</h2>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {courses.map(c => (
+          <div class="card p-6 flex flex-col">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-4xl">{c.icon}</span>
+              <span class="text-xs font-bold bg-[#fef3dc] text-[#c07818] px-3 py-1 rounded-full">{c.duration}</span>
+            </div>
+            <h3 class="font-black text-lg text-[#2c2c2c] mb-2"><span class="text-[#3d7a4a]">{c.code}.</span> {c.title}</h3>
+            <p class="text-sm text-gray-600 leading-relaxed mb-4 flex-1">{c.text}</p>
+            <div class="bg-[#e8f5ec] rounded-2xl p-4 text-sm text-[#2d5c38]">
+              <strong>Přínos pro personál:</strong> {c.benefit}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Celodenní workshop + revize -->
+  <section class="max-w-5xl mx-auto px-4 py-14 grid md:grid-cols-2 gap-6">
+    <div class="rounded-3xl bg-gradient-to-br from-[#e8f5ec] to-[#f0faf4] p-7">
+      <p class="text-sm font-bold text-[#3d7a4a] uppercase tracking-wider mb-1">2. Celodenní workshop</p>
+      <p class="text-sm text-gray-500 mb-4">8 hodin | intenzivní praktický den</p>
+      <p class="text-gray-700 text-sm mb-4">Využít lze všechny výše uvedené varianty, případně je poskládat dohromady podle potřeby.</p>
+      <ul class="space-y-2 text-sm text-gray-700 mb-4">
+        {[
+          'krátký odborný seminář: co se mění, proč a co to znamená pro běžný provoz',
+          'práce s konkrétními recepturami a hledání možností úprav',
+          'praktické vaření přímo v kuchyni',
+          'společná degustace, diskuze a návrh dalších kroků',
+        ].map(p => <li class="flex gap-2"><span class="text-[#3d7a4a]">✓</span>{p}</li>)}
+      </ul>
+      <p class="text-sm text-gray-600">Jídelna získá nejen teorii, ale především konkrétní zkušenosti, receptury a návrhy využitelné v běžném provozu.</p>
+    </div>
+    <div class="rounded-3xl bg-gradient-to-br from-[#fef3dc] to-[#fef9ef] p-7">
+      <p class="text-sm font-bold text-[#c07818] uppercase tracking-wider mb-1">3. Revize receptur a jídelníčku</p>
+      <p class="text-sm text-gray-500 mb-4">Dle rozsahu zakázky | od 2 hodin</p>
+      <ul class="space-y-2 text-sm text-gray-700 mb-4">
+        {[
+          'složení vybraných pokrmů a možnosti úprav receptur',
+          'pestrost jídelníčku a zastoupení luštěnin, ryb, zeleniny a celozrnných obilovin',
+          'možnosti snížení soli a přidaného cukru',
+          'využití méně průmyslově zpracovaných potravin',
+          'chuťová přijatelnost pokrmů pro děti',
+          'úpravy oblíbených tradičních pokrmů místo jejich úplného vyřazení',
+        ].map(p => <li class="flex gap-2"><span class="text-[#c07818]">✓</span>{p}</li>)}
+      </ul>
+      <p class="text-sm text-gray-600">Výstupem mohou být konkrétní návrhy úprav receptur a doporučení pro další práci jídelny.</p>
+    </div>
+  </section>
+
+  <!-- Ceník -->
+  <section class="bg-white py-14">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-2 text-center">Orientační cenový rozpočet</h2>
+      <p class="text-center text-gray-500 mb-8 max-w-2xl mx-auto">Ceny jsou orientační a lze je upravit podle počtu účastníků, rozsahu přípravy a vzdálenosti.</p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-100">
+        <table class="w-full text-sm min-w-[640px]">
+          <thead class="bg-[#3d7a4a] text-white">
+            <tr>
+              <th class="text-left px-4 py-3">Služba</th>
+              <th class="text-left px-4 py-3">Rozsah</th>
+              <th class="text-right px-4 py-3">Lektorné</th>
+              <th class="text-right px-4 py-3">Příprava</th>
+              <th class="text-right px-4 py-3">Suroviny*</th>
+              <th class="text-right px-4 py-3">Doprava*</th>
+            </tr>
+          </thead>
+          <tbody>
+            {prices.map((p, i) => (
+              <tr class={i % 2 ? 'bg-[#faf8f3]' : 'bg-white'}>
+                <td class="px-4 py-3 font-semibold text-[#2c2c2c]">{p.name}</td>
+                <td class="px-4 py-3 text-gray-600">{p.scope}</td>
+                <td class="px-4 py-3 text-right">{p.fee}</td>
+                <td class="px-4 py-3 text-right">{p.prep}</td>
+                <td class="px-4 py-3 text-right">{p.food}</td>
+                <td class="px-4 py-3 text-right">{p.travel}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div class="mt-4 text-xs text-gray-500 space-y-1">
+        <p>* Suroviny: budou přepočteny po upřesnění počtu účastníků.</p>
+        <p>* Doprava: orientační částka; u vzdálenějších škol bude stanovena podle skutečné vzdálenosti.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Co škola získá + rodiče a děti -->
+  <section class="max-w-5xl mx-auto px-4 py-14 grid md:grid-cols-2 gap-10">
+    <div>
+      <h2 class="text-2xl font-black text-[#2c2c2c] mb-5">Co škola získá</h2>
+      <ul class="space-y-3">
+        {gains.map(g => (
+          <li class="flex items-start gap-2.5 text-sm text-gray-700">
+            <span class="w-5 h-5 rounded-full bg-[#3d7a4a]/15 flex items-center justify-center flex-shrink-0 mt-0.5"><span class="w-2 h-2 rounded-full bg-[#3d7a4a]"></span></span>
+            {g}
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <h2 class="text-2xl font-black text-[#2c2c2c] mb-5">Škola může zapojit i rodiče a děti</h2>
+      <p class="text-sm text-gray-700 leading-relaxed mb-4">Praktický workshop může být součástí větší školní akce:</p>
+      <div class="flex flex-wrap items-center gap-2 text-xs font-semibold mb-6">
+        {['vaření s kuchařkami', 'ochutnávka', 'seminář pro rodiče', 'zapojení dětí', 'diskuze s vedením školy a zřizovatelem'].map((s, i, arr) => (
+          <>
+            <span class="bg-[#e8f5ec] text-[#2d5c38] px-3 py-1.5 rounded-full">{s}</span>
+            {i < arr.length - 1 && <span class="text-[#3d7a4a]">→</span>}
+          </>
+        ))}
+      </div>
+      <div class="bg-white rounded-2xl border-l-4 border-[#f5a623] shadow-sm p-5">
+        <p class="font-bold text-[#2c2c2c] mb-1">Příklad z praxe: ZŠ Lodhéřov</p>
+        <p class="text-sm text-gray-600">Proběhl praktický workshop zaměřený na svačinky se školními kuchařkami, na který navázala ochutnávka a setkání s rodiči, dětmi, vedením školy a zřizovatelem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Proč se mnou + objednání -->
+  <section class="bg-[#faf8f3] py-14">
+    <div class="max-w-3xl mx-auto px-4">
+      <h2 class="text-3xl font-black text-[#2c2c2c] mb-4 text-center">Proč spolupracovat se mnou?</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">
+        Jsem výživová poradkyně, lektorka seminářů a kurzů vaření se zkušeností se školním stravováním. Se školními jídelnami pracuji prakticky od roku 2015. Zajímá mě nejen to, zda je receptura výživově vhodná, ale také zda je možné ji v konkrétní kuchyni uvařit, kolik práce zabere, zda je surovina dostupná a zda bude pokrm dětem chutnat.
+      </p>
+      <p class="text-gray-700 leading-relaxed mb-10">
+        Právě propojení výživy, praktického vaření a zkušeností z prostředí školních jídelen je základem mé práce.
+      </p>
+
+      <div class="bg-[#3d7a4a] text-white rounded-3xl p-8 text-center">
+        <h2 class="text-2xl font-black mb-3">Objednání spolupráce</h2>
+        <p class="text-green-100 leading-relaxed mb-6 max-w-xl mx-auto">
+          Každou spolupráci připravuji na míru konkrétní školní jídelně. Stačí mi sdělit typ a velikost jídelny, počet účastníků, co nyní jídelna řeší a jaké téma vás zajímá. Společně nastavíme obsah, časový rozsah i rozpočet.
+        </p>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href={mailto} class="inline-flex items-center px-6 py-3 rounded-full font-bold bg-white text-[#3d7a4a] hover:bg-[#e8f5ec] transition-colors">info@prozdravedeti.cz</a>
+          <a href="tel:+420725757041" class="inline-flex items-center px-6 py-3 rounded-full font-bold border border-white/40 hover:bg-white/10 transition-colors">+420 725 757 041</a>
+        </div>
+        <p class="text-xs text-green-200 mt-6">Ing. Lenka Pokorná · výživová poradkyně · lektorka seminářů a kurzů vaření · odborná konzultantka pro školní stravování · IČ 88631681</p>
+      </div>
+    </div>
+  </section>
+</Layout>

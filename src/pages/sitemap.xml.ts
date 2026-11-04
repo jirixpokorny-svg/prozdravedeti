@@ -9,6 +9,7 @@ const STATIC_PAGES = [
   { url: '/seminare', priority: '0.9', changefreq: 'weekly' },
   { url: '/o-mne', priority: '0.7', changefreq: 'monthly' },
   { url: '/poradenstvi', priority: '0.8', changefreq: 'monthly' },
+  { url: '/skolni-jidelny', priority: '0.8', changefreq: 'monthly' },
 ];
 
 export const GET: APIRoute = () => {
